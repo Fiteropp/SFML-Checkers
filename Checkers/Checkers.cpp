@@ -4,29 +4,33 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Test");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "C+Checkers");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
+   
     sf::Event e;
 
 
     //Creating shape
     sf::RectangleShape rect;
-    rect.setSize(sf::Vector2f(100, 100));
+    rect.setSize(sf::Vector2f(400.0f, 400.0f));
+
 
 
     //Start position
-    sf::Vector2f rectPosition(400, 400);
+   rect.setPosition(440, 200);
 
 
     //Texture
-    sf::Texture dvdtexture;
-    dvdtexture.loadFromFile("pngegg.png");
-    rect.setTexture(&dvdtexture);
+    sf::Texture board;
+    board.loadFromFile("board.png");
+    rect.setTexture(&board);
 
 
-    float xVelocity = 3;
-    float yVelocity = 3;
+
+
+
+  
 
     while (window.isOpen())
     {
@@ -36,20 +40,13 @@ int main()
                 window.close();
         }
 
-        //Phys
-        rectPosition.x += xVelocity;
-        rectPosition.y += yVelocity;
-        
-        rect.setPosition(rectPosition);
-
-        if (rectPosition.x < 0 || rectPosition.x > 1280 - 100) xVelocity *= -1;
-        if (rectPosition.y < 0 || rectPosition.y > 720 - 100) yVelocity *= -1;
-
+       
 
         //Render
-        window.clear();
+        window.clear(sf::Color::White);
         window.draw(rect);
         window.display();
 
     }
+    return 0;
 }
