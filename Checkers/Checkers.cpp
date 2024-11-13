@@ -4,10 +4,11 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "C+Checkers");
+    sf::RenderWindow window(sf::VideoMode(720, 720), "C+Checkers");
+    sf::View view = window.getDefaultView();
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
-   
+
     sf::Event e;
 
 
@@ -18,7 +19,7 @@ int main()
 
 
     //Start position
-   rect.setPosition(440, 200);
+    rect.setPosition(160, 160);
 
 
     //Texture
@@ -30,7 +31,7 @@ int main()
 
 
 
-  
+
 
     while (window.isOpen())
     {
@@ -38,15 +39,22 @@ int main()
         {
             if (e.type == sf::Event::Closed)
                 window.close();
+            if (e.type == sf::Event::Resized) {
+                // resize my view
+                view.setSize({
+                        static_cast<float>(e.size.width),
+                        static_cast<float>(e.size.height)
+                    });
+                window.setView(view);
+            }
+
+
+
+            //Render
+            window.clear(sf::Color{ 2, 60, 31 });
+            window.draw(rect);
+            window.display();
+
         }
-
-       
-
-        //Render
-        window.clear(sf::Color::White);
-        window.draw(rect);
-        window.display();
-
     }
-    return 0;
 }
