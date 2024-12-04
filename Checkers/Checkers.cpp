@@ -14,6 +14,8 @@ int main()
     //Event
     sf::Event e;
 
+    sf::RectangleShape rect1(sf::Vector2f(20.0f, 20.0f));
+    rect1.setOrigin(rect1.getSize().x / 2.f, rect1.getSize().y / 2.f);
 
     //Creating shape
     sf::RectangleShape rect(sf::Vector2f(400.f, 400.f));
@@ -59,12 +61,20 @@ int main()
 
         }
 
+
+        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        rect1.setPosition(mousePos);
+
         
 
         //Render
         window.clear(sf::Color{ 2, 60, 31 });
         window.draw(rect);
         window.display();
+
+        
+
+
 
     }
 }
