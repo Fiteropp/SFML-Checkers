@@ -2,6 +2,8 @@
 
 #include "SFML/Graphics.hpp"
 #include <iostream>
+#include "Board.cpp"
+#include "Board.h"
 
 int main()
 {
@@ -10,6 +12,8 @@ int main()
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
+    Board board;
+    board.loadTextures();
 
     //Event
     sf::Event e;
