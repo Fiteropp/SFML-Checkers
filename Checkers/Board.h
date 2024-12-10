@@ -10,7 +10,9 @@ public:
 
 	bool isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
 	bool movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
+	void handleClick(int gridX, int gridY, Piece::Type currentPlayer);
 	void render(sf::RenderWindow& window);
+	void loadTextures();
 
 };
 
