@@ -1,14 +1,17 @@
 #include "Game.h"
 #include <SFML/Window.hpp>
 #include "SFML/Graphics.hpp"
+#include <iostream>
 
 
+// Constructor: Initialize window, set current player, and load board textures
 Game::Game()
 	: window(sf::VideoMode(720, 720), "C++ Checkers"),
-	currentPlayer(Piece::WHITE), isGameOver(false) {
+	currentPlayer(Piece::Type::WHITE), isGameOver(false) {
 	board.loadTextures();
 }
 
+// Process mouse input events, including player move selection
 void Game::processInput() {
 	sf::Event event;
 	while (window.pollEvent(event)) {
@@ -16,14 +19,46 @@ void Game::processInput() {
 			window.close();
 		}
 
-		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button = sf::Mouse::Left) {
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 			int mouseX = event.mouseButton.x;
 			int mouseY = event.mouseButton.y;
 
-			int gridX = mouseX / 50; //Divide by tile size
+			// Convert mouse coordinates to grid coordinates
+			int gridX = mouseX / 50; // Tile size is 50
 			int gridY = mouseY / 50;
 
-			board.handleclick
+			// Handle click and potentially switch the player
+			board.handleClick(gridX, gridY, currentPlayer);
+			
+			// If the move was valid, the player will be switched in the handleClick method
 		}
+	}
+}
+
+
+
+// Update the game state, check for win condition
+void Game::update() {
+	// Check if the current player has won
+	if (board.checkWinCondition(currentPlayer)) {
+		isGameOver = true;
+		std::cout << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << " wins!" << std::endl;
+	}
+}
+
+
+void Game::render() {
+	window.clear();
+	board.render(window);
+	window.display();
+}
+
+void Game::run() {
+	while (window.isOpen()) {
+		processInput();
+		if (!isGameOver) {
+			update();
+		}
+		render();
 	}
 }

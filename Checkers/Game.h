@@ -2,19 +2,22 @@
 #include "SFML/Graphics.hpp"
 #include "Board.h"
 #include "Piece.h"
+#include "Player.h"
 
 class Game{
 private:
 	sf::RenderWindow window;
 	Board board;
-	Piece::Type currentPlayer;
+	
 	bool isGameOver;
 
+
 	void processInput();
-	void process();
+	void update();
 	void render();
 
 public:
+	Piece::Type currentPlayer;
 	Game();
 	void run();
 
