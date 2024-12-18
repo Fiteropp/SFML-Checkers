@@ -55,7 +55,18 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	int dx = abs(endX - startX); //Horizontal
 	int dy = abs(endY - startY); //Vertical
 
+	if (board[startY][startX].isKing) {
+		std::cout << "Piece is king\n";
+		return true;
+	}
+		
+
 	if (dx == 1 && dy == 1) {
+
+		//Check if destination is empty
+		if (board[endY][endX].type != Piece::Type::NONE)
+			return false;
+
 		//Normal pieces may only move forward
 		if (!piece.isKing && ((currentPlayer == Piece::Type::BLACK && endY <= startY) ||
 							  (currentPlayer == Piece::Type::WHITE && endY >= startY)))
@@ -64,6 +75,10 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	}
 
 	if (dx == 2 && dy == 2) {
+		//Check if destination is empty
+		if (board[endY][endX].type != Piece::Type::NONE)
+			return false;
+
 		int midX = (startX + endX) / 2;
 		int midY = (startY + endY) / 2;
 
@@ -98,7 +113,7 @@ bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type cu
 		board[endY][endX].isKing = true;
 	}
 	return true;
-	switchPlayer();
+	
 };
 
 
@@ -110,6 +125,43 @@ void Board::switchPlayer() {
 	else {
 		gameInstance->currentPlayer = Piece::Type::WHITE;
 		std::cout << "Current Checkers Color = White\n";
+	}
+}
+
+
+bool Board::canContinueTurn(int startX, int startY ) {
+	int directions[4][2] = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} }; // Diagonal directions
+	bool canContinue = false;
+
+	for (int i = 0; i < 4; i++) {
+		int midX = startY + directions[i][0];
+		int midY = startY + directions[i][1];
+		int endX = startX + 2 * directions[i][0];
+		int endY = startY + 2 * directions[i][1];
+
+		// Check if mid and end positions are valid
+		if (midX >= 0 && midX < 8 && midY >= 0 && midY < 8 &&
+			endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
+
+			Piece midPiece = board[midY][midX];
+			
+
+			// Check if mid position contains an opponent piece and end position is empty
+			if (midPiece.type != Piece::Type::NONE &&
+				midPiece.type != gameInstance->currentPlayer) {
+				canContinue = true;
+				break; // Exit loop if a valid continuation is found
+			}
+		}
+	}
+
+	if (canContinue) {
+		std::cout << "Player can continue their turn.\n";
+		return true;
+	}
+	else {
+		std::cout << "Turn over, no valid moves.\n";
+		return false;
 	}
 }
 
@@ -192,6 +244,10 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
+
+			if (canContinueTurn(selectedX, selectedY)) {
+				handleClick(selectedX, selectedY, currentPlayer);
+			};
 			currentPlayer = (currentPlayer == Piece::Type::BLACK) ? Piece::Type::WHITE : Piece::Type::BLACK;
 			std::cout << "It's now " << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << "'s turn\n";
 		}
@@ -203,6 +259,8 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 		pieceSelected = false;
 		selectedX = -1;
 		selectedY = -1;
+
+		
 	}
 }
 

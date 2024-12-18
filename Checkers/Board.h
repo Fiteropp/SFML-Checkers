@@ -17,6 +17,7 @@ public:
 
     bool isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const;
     bool movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
+    bool canContinueTurn(int startX, int startY);
     void handleClick(int gridX, int gridY, Piece::Type& currentPlayer);
     void render(sf::RenderWindow& window);
     void switchPlayer();
