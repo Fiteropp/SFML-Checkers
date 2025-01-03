@@ -1,2 +1,10 @@
-﻿  Checkers.cpp
-  Checkers.vcxproj -> C:\Users\maksk\source\repos\Fiteropp\SFML-Checkers\x64\Debug\Checkers.exe
+﻿  Board.cpp
+D:\GitHub\SFML-Checkers\Checkers\Board.cpp(58,42): error C2662: bool Board::isValidKingMove(int,int,int,int,Piece::Type): невозможно преобразовать указатель "this" из "const Board" в "Board &"
+D:\GitHub\SFML-Checkers\Checkers\Board.cpp(58,38): message : В результате преобразования теряются квалификаторы
+D:\GitHub\SFML-Checkers\Checkers\Board.h(20,10): message : см. объявление "Board::isValidKingMove"
+D:\GitHub\SFML-Checkers\Checkers\Board.cpp(58,42): message : при попытке сопоставить список аргументов "(int, int, int, int, Piece::Type)"
+D:\GitHub\SFML-Checkers\Checkers\Board.cpp(119,25): error C2676: бинарный "!=": "Piece::Type" не определяет этот оператор или преобразование к типу приемлемо к встроенному оператору
+D:\GitHub\SFML-Checkers\Checkers\Board.cpp(125,32): error C2676: бинарный "==": "Piece::Type" не определяет этот оператор или преобразование к типу приемлемо к встроенному оператору
+  Main.cpp
+  Game.cpp
+  Создание кода...

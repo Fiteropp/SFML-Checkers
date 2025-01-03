@@ -55,10 +55,10 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	int dx = abs(endX - startX); //Horizontal
 	int dy = abs(endY - startY); //Vertical
 
-	if (board[startY][startX].isKing) {
-		std::cout << "Piece is king\n";
+	if (board[startY][startX].isKing && this->isValidKingMove(startX, startY, endX, endY, currentPlayer)) {
 		return true;
 	}
+	
 		
 
 	if (dx == 1 && dy == 1) {
@@ -94,6 +94,63 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 
 };
+
+
+bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) {
+
+	// Check if the move is diagonal
+	if (!isDiagonalMove(startX, startY, endX, endY)) {
+		return false; // Not a valid diagonal move
+	}
+
+	// Calculate the step direction (either -1 or 1)
+	int dx = (endX - startX) > 0 ? 1 : -1;
+	int dy = (endY - startY) > 0 ? 1 : -1;
+
+	// Iterate over all squares between the start and end positions
+	int currentX = startX + dx;
+	int currentY = startY + dy;
+
+	// Loop through all the squares between the start and end
+	while (currentX != endX && currentY != endY) {
+		Piece currentPiece = board[currentY][currentX];
+
+		// If the square is occupied, check if it's the opponent's piece
+		if (currentPiece.type != Piece(Piece::Type::NONE)) {
+			if (currentPiece.type == currentPlayer) {
+				return false; // The king cannot jump over its own pieces
+			}
+			else {
+				// We found an opponent's piece, now check if the jump ends at an empty square
+				if (board[endY][endX].type == Piece(Piece::Type::NONE)) {
+					// Perform the capture: remove opponent's piece and move the king
+					board[endY][endX] = board[startY][startX]; // Move king to the end position
+					board[startY][startX] = Piece(Piece::Type::NONE); // Clear the start position
+					board[currentY][currentX] = Piece(Piece::Type::NONE); // Clear the captured opponent's piece
+
+					std::cout << "Captured opponent's piece at (" << currentX << ", " << currentY << ").\n";
+					return true; // Valid capture and move
+				}
+				else {
+					return false; // The end square is not empty, so no valid capture
+				}
+			}
+		}
+
+		// Move to the next square
+		currentX += dx;
+		currentY += dy;
+	}
+
+	// If we reached this point, the move is valid without any captures (i.e., regular move)
+	return false; // If no capture is performed, return false
+}
+
+
+bool Board::isDiagonalMove(int startX, int startY, int endX, int endY) const {
+	return abs(endX - startX) == abs(endY - startY);
+}
+
 
 bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) {
 	if (!isValidMove(startX, startY, endX, endY, currentPlayer))
@@ -147,8 +204,9 @@ bool Board::canContinueTurn(int startX, int startY ) {
 			
 
 			// Check if mid position contains an opponent piece and end position is empty
-			if (midPiece.type != Piece::Type::NONE &&
-				midPiece.type != gameInstance->currentPlayer) {
+			if (midPiece.type != Piece::Type::NONE && // Opponent's piece
+				midPiece.type != gameInstance->currentPlayer && // Not current player's piece
+				board[endY][endX].type == Piece::Type::NONE) { // End position is empty
 				canContinue = true;
 				break; // Exit loop if a valid continuation is found
 			}
