@@ -4,16 +4,71 @@
 #include <iostream>
 
 sf::Texture resetButtonTexture;
-sf::Sprite restartButtonSprite;  // Change to sf::Sprite
+sf::Sprite restartButtonSprite; 
 
-// Constructor: Initialize window, set current player, load board textures, and button setup
+sf::Texture playbtnTexture;
+sf::Sprite playBtnSprite;
+
+sf::Texture logoTexture;
+sf::Sprite logoTextureSprite;
+
+sf::Texture stopButtonTexture2;
+sf::Sprite stopButtonSprite2;
+
+
 Game::Game()
     : window(sf::VideoMode(720, 720), "C++ Checkers"),
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
-    board(this) {  // Pass the 'this' pointer to the Board constructor
+    board(this) {  
+   
+    stopButton2.setSize(sf::Vector2f(150, 75));  
+    stopButton2.setFillColor(sf::Color::Red); 
+    stopButton2.setPosition(460, 340);
 
-    // Load textures for the board and buttons
-    board.loadTextures(); // Call Board's loadTextures method once during initialization
+
+    logo.setSize(sf::Vector2f(50.0f, 50.0f)); 
+	logo.setFillColor(sf::Color::White);
+	logo.setSize(sf::Vector2f(100, 50));
+  
+    board.loadTextures(); 
+
+
+
+    playBtn.setSize(sf::Vector2f(720, 720));
+	playBtn.setFillColor(sf::Color(255, 255, 255, 150));
+
+
+    if (!stopButtonTexture2.loadFromFile("textures/exit_btn.png")) {
+        std::cout << "Failed to load stop button texture!" << std::endl;
+    }
+    else {
+        std::cout << "Stop button texture loaded successfully!" << std::endl;
+        stopButtonSprite2.setTexture(stopButtonTexture2);
+    }
+
+
+	if (!logoTexture.loadFromFile("textures/logo.png")) {
+		std::cout << "Failed to load logo texture!" << std::endl;
+	}
+	else {
+		std::cout << "Stop button texture loaded successfully!" << std::endl;
+		logoTextureSprite.setTexture(logoTexture);
+	}
+
+
+    if (!playbtnTexture.loadFromFile("textures/play_btn.png")) {
+        std::cerr << "Failed to load play button texture!" << std::endl;
+    }
+    else {
+        std::cout << "play button texture loaded successfully!" << std::endl;
+        playBtnSprite.setTexture(playbtnTexture); 
+        playBtnSprite.setPosition(250, 280); 
+        playBtnSprite.setScale(5.5f, 5.5f);
+
+    }
+
+
+
 
     // Load the restart button texture
     if (!resetButtonTexture.loadFromFile("textures/restart_btn.png")) {
@@ -22,38 +77,54 @@ Game::Game()
     else {
         std::cout << "Restart button texture loaded successfully!" << std::endl;
         restartButtonSprite.setTexture(resetButtonTexture); // Set the texture to the sprite
-        restartButtonSprite.setPosition(420, 328); // Position the sprite
-        restartButtonSprite.setScale(2.0f, 2.0f);
+        restartButtonSprite.setPosition(460, 30); // Position the sprite
+        restartButtonSprite.setScale(3.0f, 3.0f);
 
     }
 }
 
-// Process mouse input events, including player move selection
+
+void Game::hideMenu() {
+    isPlayButtonVisible = false;  // Set the flag to hide the play button
+}
+
+
+
+
 void Game::processInput() {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
-            window.close(); // Close the window when the close event is triggered
-            return; // Exit after closing the window to prevent further processing
+            window.close();
+            return;
         }
 
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             int mouseX = event.mouseButton.x;
             int mouseY = event.mouseButton.y;
 
-            int gridX = mouseX / 50; // Tile size of 50px
-            int gridY = mouseY / 50; // Tile size of 50px
+            int gridX = mouseX / 50; // Assuming tile size is 50px
+            int gridY = mouseY / 50;
 
-            // Handle board click or other actions as needed
-            board.handleClick(gridX, gridY, currentPlayer);
+            board.handleClick(gridX, gridY, currentPlayer);  // Handle click on the board
 
-            // Check if the Restart button is clicked
+            // Handle the restart and play buttons
             if (restartButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
                 restartGame();
+            }
+            if (playBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
+                hideMenu();
+            }
+
+            if (stopButtonSprite2.getGlobalBounds().contains(mouseX, mouseY)) {
+                std::cout << "Stop button clicked!" << std::endl;
+                window.close();  
             }
         }
     }
 }
+
+
 
 // Stop the game
 void Game::stopGame() {
@@ -94,17 +165,31 @@ void Game::run() {
     }
 }
 
-// Render the game content, including buttons
-void Game::render() {
-    // Set the background color (e.g., light blue)
-    window.clear(sf::Color());  // Clear the window with light blue color
 
-    // Render the game content (e.g., board, pieces)
+void Game::render() {
+    window.clear(sf::Color());   // Clear the window
+
+    // Render the board and other elements
     board.render(window);
 
-    // Render buttons
-    window.draw(restartButtonSprite); // Draw the restart button sprite
+    // Render the restart button sprite
+    window.draw(restartButtonSprite);
+logoTextureSprite.setPosition(10, 50);
+logoTextureSprite.setScale(1.5f, 1.5f); 
 
+stopButtonSprite2.setPosition(260, 420);
+stopButtonSprite2.setScale(5.0f, 5.0f);
+    // Render the play button and sprite only if it's visible
+    if (isPlayButtonVisible) {
+        window.draw(playBtn);      // Draw the rectangle (background of the play button)
+        window.draw(playBtnSprite); 
+        window.draw(logoTextureSprite);
+        window.draw(stopButtonSprite2);// Draw the play button sprite
+    }
+
+
+  
     // Display everything drawn so far
     window.display();
 }
+

@@ -11,6 +11,8 @@ private:
     sf::RectangleShape whiteSquare;  
     sf::RectangleShape stopButton;
     sf::RectangleShape restartButton;
+    
+   
     Piece board[8][8];
     void initializeBoard();
     Game* gameInstance;

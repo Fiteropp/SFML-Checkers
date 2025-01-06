@@ -12,6 +12,14 @@ sf::Texture blackKingTexture;
 sf::Texture stopButtonTexture;
 sf::Sprite stopButtonSprite;
 
+sf::Texture playerSquareTexture;
+sf::Sprite playerSquareSprite;
+
+sf::Texture whitePlayerSquareTexture;
+sf::Texture blackPlayerSquareTexture;
+
+
+
 
 Board::Board(Game* game) : gameInstance(game) {
 	initializeBoard(); // Initialize the board
@@ -23,13 +31,17 @@ Board::Board(Game* game) : gameInstance(game) {
 	// Position the square next to the board (to the right)
 	float centerY = (8 * 50) / 2 - 50 / 2;  // Calculate the center Y position of the board
 	float nextToBoardX = 8 * 50 + 50;       // Position to the right of the board, with an offset of 50
-	whiteSquare.setPosition(nextToBoardX, centerY); 
+	whiteSquare.setPosition(320, 328);
 
 
-	stopButton.setSize(sf::Vector2f(100, 50));  // Size of the button
+	stopButton.setSize(sf::Vector2f(150, 75));  // Size of the button
 	stopButton.setFillColor(sf::Color::Red);  // Color of the button
-	stopButton.setPosition(420, 0); 
+	stopButton.setPosition(460, 340);
 	
+	
+	
+
+
 	
 	
 	// Position next to the board
@@ -73,7 +85,7 @@ void Board::handleButtonClick(int x, int y) {
 	// Check if click is within the stop button bounds
 	if (stopButton.getGlobalBounds().contains(static_cast<float>(x), static_cast<float>(y))) {
 		std::cout << "Stop button clicked!" << std::endl;
-		gameInstance->window.close();  // Close the game window
+		gameInstance->window.close();  
 	}
 	// Check if click is within the restart button bounds
 	else if (restartButton.getGlobalBounds().contains(static_cast<float>(x), static_cast<float>(y))) {
@@ -302,13 +314,34 @@ void Board::loadTextures() {
 	whiteKingTexture.loadFromFile("textures/white_king.png");
 	blackKingTexture.loadFromFile("textures/black_king.png");
 
-	// Load stop button texture
+
+
+
+
+
+
 	if (!stopButtonTexture.loadFromFile("textures/exit_btn.png")) {
 		std::cout << "Failed to load stop button texture!" << std::endl;
 	}
 	else {
 		std::cout << "Stop button texture loaded successfully!" << std::endl;
 		stopButtonSprite.setTexture(stopButtonTexture);
+	}
+
+
+
+	if (!whitePlayerSquareTexture.loadFromFile("textures/white_king.png")) {
+		std::cout << "Failed to load white player square texture!" << std::endl;
+	}
+	else {
+		std::cout << "White player square texture loaded successfully!" << std::endl;
+	}
+
+	if (!blackPlayerSquareTexture.loadFromFile("textures/black_king.png")) {
+		std::cout << "Failed to load black player square texture!" << std::endl;
+	}
+	else {
+		std::cout << "Black player square texture loaded successfully!" << std::endl;
 	}
 
 
@@ -366,15 +399,37 @@ void Board::render(sf::RenderWindow& window) {
 	stopButtonSprite.setScale(buttonWidth / stopButtonSprite.getLocalBounds().width,
 		buttonHeight / stopButtonSprite.getLocalBounds().height);
 
-	// Draw the stop button sprite at the correct position
+	if (gameInstance->currentPlayer == Piece::Type::WHITE) {
+		playerSquareSprite.setTexture(whitePlayerSquareTexture);
+	}
+	else {
+		playerSquareSprite.setTexture(blackPlayerSquareTexture);
+	}
+
+	// Adjust the position and scale of the player square sprite
+	float nextToBoardX = 8 * tileSize + 50; // Position to the right of the board
+	float centerY = (8 * tileSize) / 2 - playerSquareSprite.getLocalBounds().height / 2;
+	playerSquareSprite.setPosition(nextToBoardX, centerY);
+	playerSquareSprite.setScale(5.0f, 5.0f);
+
+	// Adjust logo sprite position (example)
+	float logoX = 10.0f; // Set logo X position
+	float logoY = 10.0f; // Set logo Y position
+	
+
 	window.draw(stopButtonSprite);
 
-	// Draw restart button
 	window.draw(restartButton);
 
-	// Draw white square
-	window.draw(whiteSquare);
+	
+	window.draw(playerSquareSprite);
+
+
+	
+
+	
 };
+
 
 
 
