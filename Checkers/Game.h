@@ -4,22 +4,22 @@
 #include "Piece.h"
 #include "Player.h"
 
-class Game{
+class Game {
 private:
-	sf::RenderWindow window;
-	Board board;
-	
-	bool isGameOver;
+   
+    Board board;
 
+    bool isGameOver;
 
-	void processInput();
-	void update();
-	void render();
+    void processInput();
+    void update();
+    void render();
 
 public:
-	Piece::Type currentPlayer;
-	Game();
-	void run();
+    sf::RenderWindow window;
+    Piece::Type currentPlayer;
 
+    Game();
+    void run();
+    void stopGame(); // Declare the stopGame method
 };
-

@@ -9,9 +9,24 @@ sf::Texture blackPieceTexture;
 sf::Texture whiteKingTexture;
 sf::Texture blackKingTexture;
 
-Board::Board() {
-	initializeBoard();
+Board::Board(Game* game) : gameInstance(game) {
+	initializeBoard(); // Initialize the board
+
+	// Initialize the white square
+	whiteSquare.setSize(sf::Vector2f(50.0f, 50.0f));  // Set the size of the square
+	whiteSquare.setFillColor(sf::Color::White);        // Set the color to white
+
+	// Position the square next to the board (to the right)
+	float centerY = (8 * 50) / 2 - 50 / 2;  // Calculate the center Y position of the board
+	float nextToBoardX = 8 * 50 + 50;       // Position to the right of the board, with an offset of 50
+	whiteSquare.setPosition(nextToBoardX, centerY); 
+
+
+	stopButton.setSize(sf::Vector2f(100, 50));  // Size of the button
+	stopButton.setFillColor(sf::Color::Red);  // Color of the button
+	stopButton.setPosition(420, 0);  // Position next to the board
 }
+
 
 //Place Pieces
 void Board::initializeBoard() {
@@ -29,6 +44,20 @@ void Board::initializeBoard() {
 		}
 	}
 };
+
+
+void Board::handleButtonClick(int x, int y) {
+    // Check if the click is within the stop button's bounds
+    if (stopButton.getGlobalBounds().contains(static_cast<float>(x), static_cast<float>(y))) {
+        // Close the window (and therefore the app)
+        if (gameInstance) {  // Make sure gameInstance is not null
+            gameInstance->window.close();
+        }
+    }
+}
+
+
+
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
 	//Check if start and end coordinates are valid
@@ -55,11 +84,10 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	int dx = abs(endX - startX); //Horizontal
 	int dy = abs(endY - startY); //Vertical
 
-	if (board[startY][startX].isKing && this->isValidKingMove(startX, startY, endX, endY, currentPlayer)) {
+	if (board[startY][startX].isKing && isValidKingMove(startX, startY, endX, endY, currentPlayer)) {
 		return true;
 	}
-	
-		
+
 
 	if (dx == 1 && dy == 1) {
 
@@ -96,8 +124,7 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 };
 
 
-bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) {
-
+bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
 	// Check if the move is diagonal
 	if (!isDiagonalMove(startX, startY, endX, endY)) {
 		return false; // Not a valid diagonal move
@@ -113,23 +140,17 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 
 	// Loop through all the squares between the start and end
 	while (currentX != endX && currentY != endY) {
-		Piece currentPiece = board[currentY][currentX];
+		const Piece& currentPiece = board[currentY][currentX];
 
 		// If the square is occupied, check if it's the opponent's piece
-		if (currentPiece.type != Piece(Piece::Type::NONE)) {
+		if (currentPiece.type != Piece::Type::NONE) {
 			if (currentPiece.type == currentPlayer) {
 				return false; // The king cannot jump over its own pieces
 			}
 			else {
 				// We found an opponent's piece, now check if the jump ends at an empty square
-				if (board[endY][endX].type == Piece(Piece::Type::NONE)) {
-					// Perform the capture: remove opponent's piece and move the king
-					board[endY][endX] = board[startY][startX]; // Move king to the end position
-					board[startY][startX] = Piece(Piece::Type::NONE); // Clear the start position
-					board[currentY][currentX] = Piece(Piece::Type::NONE); // Clear the captured opponent's piece
-
-					std::cout << "Captured opponent's piece at (" << currentX << ", " << currentY << ").\n";
-					return true; // Valid capture and move
+				if (board[endY][endX].type == Piece::Type::NONE) {
+					return true; // Valid capture move
 				}
 				else {
 					return false; // The end square is not empty, so no valid capture
@@ -142,7 +163,6 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 		currentY += dy;
 	}
 
-	// If we reached this point, the move is valid without any captures (i.e., regular move)
 	return false; // If no capture is performed, return false
 }
 
@@ -225,6 +245,8 @@ bool Board::canContinueTurn(int startX, int startY ) {
 
 
 
+
+
 void Board::loadTextures() {
 	//Load textures from files
 	whitePieceTexture.loadFromFile("textures/white.png");
@@ -277,12 +299,26 @@ void Board::render(sf::RenderWindow& window) {
 
 			
 	}
+	window.draw(stopButton);
+	window.draw(whiteSquare);
+	
 };
+
+
 
 void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 	static bool pieceSelected = false;
 	static int selectedX = -1, selectedY = -1;
 
+	// Check if click is on the stop button
+// Check if click is on the stop button
+	if (stopButton.getGlobalBounds().contains(static_cast<float>(gridX * 50), static_cast<float>(gridY * 50))) {
+		gameInstance->stopGame(); 
+		return;  
+	}
+
+
+	// Handle piece selection and movement if the button is not clicked
 	if (!pieceSelected) {
 		// Select piece
 		if (board[gridY][gridX].type == currentPlayer) {
@@ -302,10 +338,9 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
-
 			if (canContinueTurn(selectedX, selectedY)) {
 				handleClick(selectedX, selectedY, currentPlayer);
-			};
+			}
 			currentPlayer = (currentPlayer == Piece::Type::BLACK) ? Piece::Type::WHITE : Piece::Type::BLACK;
 			std::cout << "It's now " << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << "'s turn\n";
 		}
@@ -317,10 +352,11 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 		pieceSelected = false;
 		selectedX = -1;
 		selectedY = -1;
-
-		
 	}
 }
+
+
+
 
 
 

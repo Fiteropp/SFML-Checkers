@@ -1,4 +1,5 @@
 #include "Game.h"
+
 #include <SFML/Window.hpp>
 #include "SFML/Graphics.hpp"
 #include <iostream>
@@ -7,7 +8,8 @@
 // Constructor: Initialize window, set current player, and load board textures
 Game::Game()
 	: window(sf::VideoMode(720, 720), "C++ Checkers"),
-	currentPlayer(Piece::Type::WHITE), isGameOver(false) {
+	currentPlayer(Piece::Type::WHITE), isGameOver(false),
+	board(this) {  // Pass the 'this' pointer to the Board constructor
 	board.loadTextures();
 }
 
@@ -16,24 +18,38 @@ void Game::processInput() {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
-			window.close();
+			window.close(); // Close the window when the close event is triggered
+			return; // Exit after closing the window to prevent further processing
 		}
 
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 			int mouseX = event.mouseButton.x;
 			int mouseY = event.mouseButton.y;
 
-			// Convert mouse coordinates to grid coordinates
-			int gridX = mouseX / 50; // Tile size is 50
-			int gridY = mouseY / 50;
+			int gridX = mouseX / 50; // Tile size of 50px
+			int gridY = mouseY / 50; // Tile size of 50px
 
-			// Handle click and potentially switch the player
+			// Handle board click or other actions as needed
 			board.handleClick(gridX, gridY, currentPlayer);
-			
-			// If the move was valid, the player will be switched in the handleClick method
 		}
 	}
 }
+
+
+
+
+void Game::stopGame() {
+	std::cout << "Game Over!" << std::endl;
+
+	if (window.isOpen()) {
+		window.close();
+	}
+	else {
+		std::cerr << "Window is already closed!" << std::endl;
+	}
+}
+
+
 
 
 
@@ -41,10 +57,11 @@ void Game::processInput() {
 void Game::update() {
 	// Check if the current player has won
 	if (board.checkWinCondition(currentPlayer)) {
-		isGameOver = true;
+		stopGame(); // Stop the game when a win condition is met
 		std::cout << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << " wins!" << std::endl;
 	}
 }
+
 
 
 void Game::render() {
@@ -54,11 +71,11 @@ void Game::render() {
 }
 
 void Game::run() {
+	// Main game loop
 	while (window.isOpen()) {
-		processInput();
-		if (!isGameOver) {
-			update();
-		}
-		render();
+		processInput(); // Handle user input
+		update();       // Update game state
+		render();       // Render graphics to the window
 	}
+
 }
