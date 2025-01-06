@@ -4,7 +4,7 @@
 #include <iostream>
 
 sf::Texture resetButtonTexture;
-sf::Sprite restartButtonSprite; 
+sf::Sprite restartButtonSprite;
 
 sf::Texture playbtnTexture;
 sf::Sprite playBtnSprite;
@@ -15,28 +15,23 @@ sf::Sprite logoTextureSprite;
 sf::Texture stopButtonTexture2;
 sf::Sprite stopButtonSprite2;
 
-
 Game::Game()
-    : window(sf::VideoMode(720, 720), "C++ Checkers"),
+    : window(sf::VideoMode(720, 720), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
-    board(this) {  
-   
-    stopButton2.setSize(sf::Vector2f(150, 75));  
-    stopButton2.setFillColor(sf::Color::Red); 
+    board(this) {
+
+    stopButton2.setSize(sf::Vector2f(150, 75));
+    stopButton2.setFillColor(sf::Color::Red);
     stopButton2.setPosition(460, 340);
 
+    logo.setSize(sf::Vector2f(50.0f, 50.0f));
+    logo.setFillColor(sf::Color::White);
+    logo.setSize(sf::Vector2f(100, 50));
 
-    logo.setSize(sf::Vector2f(50.0f, 50.0f)); 
-	logo.setFillColor(sf::Color::White);
-	logo.setSize(sf::Vector2f(100, 50));
-  
-    board.loadTextures(); 
-
-
+    board.loadTextures();
 
     playBtn.setSize(sf::Vector2f(720, 720));
-	playBtn.setFillColor(sf::Color(255, 255, 255, 150));
-
+    playBtn.setFillColor(sf::Color(255, 255, 255, 150));
 
     if (!stopButtonTexture2.loadFromFile("textures/exit_btn.png")) {
         std::cout << "Failed to load stop button texture!" << std::endl;
@@ -46,29 +41,23 @@ Game::Game()
         stopButtonSprite2.setTexture(stopButtonTexture2);
     }
 
-
-	if (!logoTexture.loadFromFile("textures/logo.png")) {
-		std::cout << "Failed to load logo texture!" << std::endl;
-	}
-	else {
-		std::cout << "Stop button texture loaded successfully!" << std::endl;
-		logoTextureSprite.setTexture(logoTexture);
-	}
-
+    if (!logoTexture.loadFromFile("textures/logo.png")) {
+        std::cout << "Failed to load logo texture!" << std::endl;
+    }
+    else {
+        std::cout << "Stop button texture loaded successfully!" << std::endl;
+        logoTextureSprite.setTexture(logoTexture);
+    }
 
     if (!playbtnTexture.loadFromFile("textures/play_btn.png")) {
         std::cerr << "Failed to load play button texture!" << std::endl;
     }
     else {
-        std::cout << "play button texture loaded successfully!" << std::endl;
-        playBtnSprite.setTexture(playbtnTexture); 
-        playBtnSprite.setPosition(250, 280); 
+        std::cout << "Play button texture loaded successfully!" << std::endl;
+        playBtnSprite.setTexture(playbtnTexture);
+        playBtnSprite.setPosition(250, 280);
         playBtnSprite.setScale(5.5f, 5.5f);
-
     }
-
-
-
 
     // Load the restart button texture
     if (!resetButtonTexture.loadFromFile("textures/restart_btn.png")) {
@@ -79,17 +68,12 @@ Game::Game()
         restartButtonSprite.setTexture(resetButtonTexture); // Set the texture to the sprite
         restartButtonSprite.setPosition(460, 30); // Position the sprite
         restartButtonSprite.setScale(3.0f, 3.0f);
-
     }
 }
-
 
 void Game::hideMenu() {
     isPlayButtonVisible = false;  // Set the flag to hide the play button
 }
-
-
-
 
 void Game::processInput() {
     sf::Event event;
@@ -118,13 +102,11 @@ void Game::processInput() {
 
             if (stopButtonSprite2.getGlobalBounds().contains(mouseX, mouseY)) {
                 std::cout << "Stop button clicked!" << std::endl;
-                window.close();  
+                window.close();
             }
         }
     }
 }
-
-
 
 // Stop the game
 void Game::stopGame() {
@@ -165,7 +147,6 @@ void Game::run() {
     }
 }
 
-
 void Game::render() {
     window.clear(sf::Color());   // Clear the window
 
@@ -174,22 +155,20 @@ void Game::render() {
 
     // Render the restart button sprite
     window.draw(restartButtonSprite);
-logoTextureSprite.setPosition(10, 50);
-logoTextureSprite.setScale(1.5f, 1.5f); 
+    logoTextureSprite.setPosition(10, 50);
+    logoTextureSprite.setScale(1.5f, 1.5f);
 
-stopButtonSprite2.setPosition(260, 420);
-stopButtonSprite2.setScale(5.0f, 5.0f);
+    stopButtonSprite2.setPosition(260, 420);
+    stopButtonSprite2.setScale(5.0f, 5.0f);
+
     // Render the play button and sprite only if it's visible
     if (isPlayButtonVisible) {
         window.draw(playBtn);      // Draw the rectangle (background of the play button)
-        window.draw(playBtnSprite); 
+        window.draw(playBtnSprite);
         window.draw(logoTextureSprite);
         window.draw(stopButtonSprite2);// Draw the play button sprite
     }
 
-
-  
     // Display everything drawn so far
     window.display();
 }
-
