@@ -9,6 +9,10 @@ sf::Texture blackPieceTexture;
 sf::Texture whiteKingTexture;
 sf::Texture blackKingTexture;
 
+sf::Texture stopButtonTexture;
+sf::Sprite stopButtonSprite;
+
+
 Board::Board(Game* game) : gameInstance(game) {
 	initializeBoard(); // Initialize the board
 
@@ -24,12 +28,17 @@ Board::Board(Game* game) : gameInstance(game) {
 
 	stopButton.setSize(sf::Vector2f(100, 50));  // Size of the button
 	stopButton.setFillColor(sf::Color::Red);  // Color of the button
-	stopButton.setPosition(420, 0);  // Position next to the board
+	stopButton.setPosition(420, 0); 
+	
+	
+	
+	// Position next to the board
 }
 
 
 //Place Pieces
 void Board::initializeBoard() {
+	std::cout << "Initializing board...\n";
 	for (int y = 0; y < 8; ++y) {
 		for (int x = 0; x < 8; ++x) {
 			if (y < 3 && (x + y) % 2 != 0) {
@@ -45,17 +54,33 @@ void Board::initializeBoard() {
 	}
 };
 
+void Board::resGame() {
+	// Reinitialize the board
+	initializeBoard();
 
-void Board::handleButtonClick(int x, int y) {
-    // Check if the click is within the stop button's bounds
-    if (stopButton.getGlobalBounds().contains(static_cast<float>(x), static_cast<float>(y))) {
-        // Close the window (and therefore the app)
-        if (gameInstance) {  // Make sure gameInstance is not null
-            gameInstance->window.close();
-        }
-    }
+	// Reset any other necessary game state, e.g., currentPlayer
+	gameInstance->currentPlayer = Piece::Type::WHITE;  // Example reset
+
+	// Optionally, print something to debug
+	std::cout << "Game Restarted!" << std::endl;
 }
 
+
+
+void Board::handleButtonClick(int x, int y) {
+	std::cout << "Mouse click at: " << x << ", " << y << std::endl;
+
+	// Check if click is within the stop button bounds
+	if (stopButton.getGlobalBounds().contains(static_cast<float>(x), static_cast<float>(y))) {
+		std::cout << "Stop button clicked!" << std::endl;
+		gameInstance->window.close();  // Close the game window
+	}
+	// Check if click is within the restart button bounds
+	else if (restartButton.getGlobalBounds().contains(static_cast<float>(x), static_cast<float>(y))) {
+		std::cout << "Restart button clicked!" << std::endl;
+		resGame();  // Restart the game
+	}
+}
 
 
 
@@ -122,6 +147,29 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 
 };
+
+
+void Board::resetBoard() {
+	for (int i = 0; i < 8; ++i) {
+		for (int j = 0; j < 8; ++j) {
+			if ((i + j) % 2 != 0) { // Only place pieces on black squares
+				if (i < 3) {
+					board[i][j] = Piece(Piece::Type::BLACK, false); // Black pieces, no coords
+				}
+				else if (i > 4) {
+					board[i][j] = Piece(Piece::Type::WHITE, false); // White pieces, no coords
+				}
+				else {
+					board[i][j] = Piece(Piece::Type::NONE, false); // Empty squares
+				}
+			}
+			else {
+				board[i][j] = Piece(Piece::Type::NONE, false); // Empty squares
+			}
+		}
+	}
+}
+
 
 
 bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
@@ -253,15 +301,26 @@ void Board::loadTextures() {
 	blackPieceTexture.loadFromFile("textures/black.png");
 	whiteKingTexture.loadFromFile("textures/white_king.png");
 	blackKingTexture.loadFromFile("textures/black_king.png");
+
+	// Load stop button texture
+	if (!stopButtonTexture.loadFromFile("textures/exit_btn.png")) {
+		std::cout << "Failed to load stop button texture!" << std::endl;
+	}
+	else {
+		std::cout << "Stop button texture loaded successfully!" << std::endl;
+		stopButtonSprite.setTexture(stopButtonTexture);
+	}
+
+
 };
 
 void Board::render(sf::RenderWindow& window) {
-	const float tileSize = 50.0f; //Tile sizing
+	const float tileSize = 50.0f; // Tile sizing
 
-	//Draw the board
+	// Draw the board
 	for (int y = 0; y < 8; ++y) {
 		for (int x = 0; x < 8; ++x) {
-			//Draw board tiles
+			// Draw board tiles
 			sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
 			tile.setPosition(x * tileSize, y * tileSize);
 
@@ -273,7 +332,7 @@ void Board::render(sf::RenderWindow& window) {
 			}
 			window.draw(tile);
 
-			//Draw pieces
+			// Draw pieces
 			Piece piece = board[y][x];
 			if (piece.type != Piece::Type::NONE) {
 				sf::Sprite pieceSprite;
@@ -285,23 +344,36 @@ void Board::render(sf::RenderWindow& window) {
 					pieceSprite.setTexture(piece.isKing ? blackKingTexture : blackPieceTexture);
 				}
 
-				//Pos sprite
+				// Set sprite position
 				pieceSprite.setPosition(x * tileSize, y * tileSize);
 
-				//Scale if needed
+				// Scale sprite if needed
 				pieceSprite.setScale(tileSize / pieceSprite.getLocalBounds().width,
 					tileSize / pieceSprite.getLocalBounds().height);
 
 				window.draw(pieceSprite);
 			}
-			}
-				
-
-			
+		}
 	}
-	window.draw(stopButton);
+
+	// Adjust the stop button position
+	stopButtonSprite.setPosition(stopButton.getPosition()); // Position it according to stopButton's position
+
+	// Scale the stop button texture to fit the button's size
+	float buttonWidth = stopButton.getSize().x;
+	float buttonHeight = stopButton.getSize().y;
+
+	stopButtonSprite.setScale(buttonWidth / stopButtonSprite.getLocalBounds().width,
+		buttonHeight / stopButtonSprite.getLocalBounds().height);
+
+	// Draw the stop button sprite at the correct position
+	window.draw(stopButtonSprite);
+
+	// Draw restart button
+	window.draw(restartButton);
+
+	// Draw white square
 	window.draw(whiteSquare);
-	
 };
 
 
@@ -315,6 +387,11 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 	if (stopButton.getGlobalBounds().contains(static_cast<float>(gridX * 50), static_cast<float>(gridY * 50))) {
 		gameInstance->stopGame(); 
 		return;  
+	}
+
+	if (restartButton.getGlobalBounds().contains(static_cast<float>(gridX), static_cast<float>(gridY))) {
+		resGame();
+		return;
 	}
 
 

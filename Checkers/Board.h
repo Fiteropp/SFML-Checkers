@@ -10,6 +10,7 @@ class Board {
 private:
     sf::RectangleShape whiteSquare;  
     sf::RectangleShape stopButton;
+    sf::RectangleShape restartButton;
     Piece board[8][8];
     void initializeBoard();
     Game* gameInstance;
@@ -29,7 +30,8 @@ public:
     bool checkWinCondition(Piece::Type currentPlayer) const;
 
     void handleButtonClick(int x, int y);
-
+    void resGame();
+    void resetBoard();
 };
 
 #endif

@@ -1,2 +1,12 @@
-﻿  Board.cpp
+﻿  Game.cpp
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,72): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,72): warning C4244:         with
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,72): warning C4244:         [
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,72): warning C4244:             T=float
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,72): warning C4244:         ]
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,64): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,64): warning C4244:         with
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,64): warning C4244:         [
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,64): warning C4244:             T=float
+C:\Users\maksk\source\repos\SFML-Checkers\Checkers\Game.cpp(51,64): warning C4244:         ]
   Checkers.vcxproj -> C:\Users\maksk\source\repos\SFML-Checkers\x64\Debug\Checkers.exe

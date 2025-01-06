@@ -6,8 +6,11 @@
 
 class Game {
 private:
-   
     Board board;
+
+    // Buttons
+    sf::RectangleShape stopButton;
+    sf::RectangleShape restartButton;
 
     bool isGameOver;
 
@@ -21,5 +24,6 @@ public:
 
     Game();
     void run();
-    void stopGame(); // Declare the stopGame method
+    void stopGame();  // Stop the game
+    void restartGame(); // Restart the game
 };
