@@ -7,13 +7,15 @@
 class Game {
 private:
         Board board;
-    sf::RectangleShape stopButton2;
     sf::RectangleShape restartButton;
     sf::RectangleShape playBtn;
     sf::Sprite playBtnSprite;
     bool isPlayButtonVisible = true;  
     bool isGameOver;
     sf::RectangleShape logo;
+
+    bool loadTexture(const std::string& filePath, sf::Texture& texture);
+    void configureSprite(sf::Sprite& sprite, sf::Texture& texture, sf::Vector2f position = { 0, 0 }, sf::Vector2f scale = { 1.0f, 1.0f });
     void processInput();
     void update();
     void render();
@@ -25,6 +27,7 @@ public:
     Piece::Type currentPlayer;
 
     Game();
+    void loadButtonsTextures();
     void run();
     void stopGame();  
     void restartGame();

@@ -14,11 +14,13 @@ private:
     
    
     Piece board[8][8];
-    void initializeBoard();
+    
     Game* gameInstance;
 
 public:
     Board(Game* game);
+
+    void initializeBoard();
 
     bool isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const;
     bool movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);

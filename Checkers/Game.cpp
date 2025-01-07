@@ -3,6 +3,8 @@
 #include "SFML/Graphics.hpp"
 #include <iostream>
 
+#define DEBUG // Comment this out to disable debug mode
+
 sf::Texture resetButtonTexture;
 sf::Sprite restartButtonSprite;
 
@@ -12,17 +14,13 @@ sf::Sprite playBtnSprite;
 sf::Texture logoTexture;
 sf::Sprite logoTextureSprite;
 
-sf::Texture stopButtonTexture2;
-sf::Sprite stopButtonSprite2;
+sf::Texture menuGameExitTexture;
+sf::Sprite menuGameExitSprite;
 
 Game::Game()
-    : window(sf::VideoMode(720, 720), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
+    : window(sf::VideoMode(900, 720), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
     board(this) {
-
-    stopButton2.setSize(sf::Vector2f(150, 75));
-    stopButton2.setFillColor(sf::Color::Red);
-    stopButton2.setPosition(460, 340);
 
     logo.setSize(sf::Vector2f(50.0f, 50.0f));
     logo.setFillColor(sf::Color::White);
@@ -30,44 +28,57 @@ Game::Game()
 
     board.loadTextures();
 
-    playBtn.setSize(sf::Vector2f(720, 720));
-    playBtn.setFillColor(sf::Color(255, 255, 255, 150));
+    playBtn.setSize(sf::Vector2f(900, 720));
+    playBtn.setFillColor(sf::Color(0, 128, 111, 255));
+    loadButtonsTextures();
+}
 
-    if (!stopButtonTexture2.loadFromFile("textures/exit_btn.png")) {
-        std::cout << "Failed to load stop button texture!" << std::endl;
+
+
+// Function to load textures
+bool Game::loadTexture(const std::string& filePath, sf::Texture& texture) {
+    if (!texture.loadFromFile(filePath)) {
+#ifdef DEBUG
+        std::cerr << "Failed to load texture: " << filePath << std::endl;
+#endif
+        return false; // Indicate failure
     }
-    else {
-        std::cout << "Stop button texture loaded successfully!" << std::endl;
-        stopButtonSprite2.setTexture(stopButtonTexture2);
+#ifdef DEBUG
+    std::cout << "Successfully loaded texture: " << filePath << std::endl;
+#endif
+    return true; // Indicate success
+}
+
+void Game::configureSprite(sf::Sprite& sprite, sf::Texture& texture,
+    sf::Vector2f position,
+    sf::Vector2f scale) {
+    sprite.setTexture(texture);
+    sprite.setPosition(position);
+    sprite.setScale(scale);
+}
+
+
+
+void Game::loadButtonsTextures()
+{
+
+    if (loadTexture("textures/exit_btn.png", menuGameExitTexture)) {
+        configureSprite(menuGameExitSprite, menuGameExitTexture);
     }
 
-    if (!logoTexture.loadFromFile("textures/logo.png")) {
-        std::cout << "Failed to load logo texture!" << std::endl;
-    }
-    else {
-        std::cout << "Stop button texture loaded successfully!" << std::endl;
-        logoTextureSprite.setTexture(logoTexture);
+    // Load and configure the logo texture
+    if (loadTexture("textures/logo.png", logoTexture)) {
+        configureSprite(logoTextureSprite, logoTexture);
     }
 
-    if (!playbtnTexture.loadFromFile("textures/play_btn.png")) {
-        std::cerr << "Failed to load play button texture!" << std::endl;
-    }
-    else {
-        std::cout << "Play button texture loaded successfully!" << std::endl;
-        playBtnSprite.setTexture(playbtnTexture);
-        playBtnSprite.setPosition(250, 280);
-        playBtnSprite.setScale(5.5f, 5.5f);
+    // Load and configure the play button texture
+    if (loadTexture("textures/play_btn.png", playbtnTexture)) {
+        configureSprite(playBtnSprite, playbtnTexture, { 330, 280 }, { 5.5f, 5.5f });
     }
 
-    // Load the restart button texture
-    if (!resetButtonTexture.loadFromFile("textures/restart_btn.png")) {
-        std::cerr << "Failed to load restart button texture!" << std::endl;
-    }
-    else {
-        std::cout << "Restart button texture loaded successfully!" << std::endl;
-        restartButtonSprite.setTexture(resetButtonTexture); // Set the texture to the sprite
-        restartButtonSprite.setPosition(460, 30); // Position the sprite
-        restartButtonSprite.setScale(3.0f, 3.0f);
+    // Load and configure the restart button texture
+    if (loadTexture("textures/restart_btn.png", resetButtonTexture)) {
+        configureSprite(restartButtonSprite, resetButtonTexture, { 690, 60 }, { 2.25f, 2.25f });
     }
 }
 
@@ -87,12 +98,13 @@ void Game::processInput() {
             int mouseX = event.mouseButton.x;
             int mouseY = event.mouseButton.y;
 
-            int gridX = mouseX / 50; // Assuming tile size is 50px
-            int gridY = mouseY / 50;
+            const float tileSize = 75;
+
+            int gridX = mouseX / tileSize; // Assuming tile size is 50px
+            int gridY = mouseY / tileSize;
 
             board.handleClick(gridX, gridY, currentPlayer);  // Handle click on the board
 
-            // Handle the restart and play buttons
             if (restartButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
                 restartGame();
             }
@@ -100,10 +112,11 @@ void Game::processInput() {
                 hideMenu();
             }
 
-            if (stopButtonSprite2.getGlobalBounds().contains(mouseX, mouseY)) {
+            if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
                 std::cout << "Stop button clicked!" << std::endl;
                 window.close();
             }
+            
         }
     }
 }
@@ -141,9 +154,9 @@ void Game::update() {
 void Game::run() {
     // Main game loop
     while (window.isOpen()) {
-        processInput(); // Handle user input
-        update();       // Update game state
-        render();       // Render graphics to the window
+        processInput(); 
+        update();       
+        render();       
     }
 }
 
@@ -155,18 +168,26 @@ void Game::render() {
 
     // Render the restart button sprite
     window.draw(restartButtonSprite);
-    logoTextureSprite.setPosition(10, 50);
-    logoTextureSprite.setScale(1.5f, 1.5f);
+    logoTextureSprite.setPosition(20, 35);
+    logoTextureSprite.setScale(1.85f, 1.85f);
 
-    stopButtonSprite2.setPosition(260, 420);
-    stopButtonSprite2.setScale(5.0f, 5.0f);
+    menuGameExitSprite.setPosition(342, 420);
+    menuGameExitSprite.setScale(5.0f, 5.0f);
 
     // Render the play button and sprite only if it's visible
     if (isPlayButtonVisible) {
-        window.draw(playBtn);      // Draw the rectangle (background of the play button)
+        window.draw(playBtn);   
         window.draw(playBtnSprite);
         window.draw(logoTextureSprite);
-        window.draw(stopButtonSprite2);// Draw the play button sprite
+        window.draw(menuGameExitSprite);// Draw the Exit button sprite
+    }
+    else {
+        //Move Exit Button
+        menuGameExitSprite.setScale(2.0f, 2.0f);
+        menuGameExitSprite.setPosition(730, 610);
+        window.draw(menuGameExitSprite);
+
+        window.draw(restartButtonSprite);
     }
 
     // Display everything drawn so far
