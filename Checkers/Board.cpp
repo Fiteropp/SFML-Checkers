@@ -68,84 +68,53 @@ void Board::initializeBoard() {
 void Board::resetBoard() {
 	for (int i = 0; i < 8; ++i) {
 		for (int j = 0; j < 8; ++j) {
-			if ((i + j) % 2 != 0) { // Only place pieces on black squares
+			if ((i + j) % 2 != 0) { 
 				if (i < 3) {
-					board[i][j] = Piece(Piece::Type::BLACK, false); // Black pieces, no coords
+					board[i][j] = Piece(Piece::Type::BLACK, false);
 				}
 				else if (i > 4) {
-					board[i][j] = Piece(Piece::Type::WHITE, false); // White pieces, no coords
+					board[i][j] = Piece(Piece::Type::WHITE, false); 
 				}
 				else {
-					board[i][j] = Piece(Piece::Type::NONE, false); // Empty squares
+					board[i][j] = Piece(Piece::Type::NONE, false);
 				}
 			}
 			else {
-				board[i][j] = Piece(Piece::Type::NONE, false); // Empty squares
+				board[i][j] = Piece(Piece::Type::NONE, false); 
 			}
 		}
 	}
 }
 
-void Board::resGame() {
-	// Reinitialize the board
-	initializeBoard();
-
-	// Reset any other necessary game state, e.g., currentPlayer
-	gameInstance->currentPlayer = Piece::Type::WHITE;  // Example reset
-
-	// Optionally, print something to debug
-	std::cout << "Game Restarted!" << std::endl;
-}
 
 
 
-void Board::handleButtonClick(int x, int y) {
-	
-	
-	std::cout << "Mouse click at: " << x << ", " << y << std::endl;
-
-	
-}
 
 
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
-	//Check if start and end coordinates are valid
+	// Check if start and end coordinates are valid
 	if (startX < 0 || startX >= 8 || startY < 0 || startY >= 8 ||
 		endX < 0 || endX >= 8 || endY < 0 || endY >= 8)
 		return false;
 
-	//Get piece moving
+	// Get piece moving
 	Piece piece = board[startY][startX];
-	if (piece.type == Piece::Type::NONE || piece.type != currentPlayer) {
-		std::cout << "Invalid piece selected\n";
-		return false;
-	}
 
+	// Calculate distances
+	int dx = abs(endX - startX); // Horizontal
+	int dy = abs(endY - startY); // Vertical
 
-	//Check if destination is empty
-	if (board[startY][startX].type == Piece::Type::NONE) {
-		std::cout << "Destination is empty\n";
-		return false;
-	}
-
-
-	//Calculate distances
-	int dx = abs(endX - startX); //Horizontal
-	int dy = abs(endY - startY); //Vertical
-
-	if (board[startY][startX].isKing && isValidKingMove(startX, startY, endX, endY, currentPlayer)) {
+	if (piece.isKing && isValidKingMove(startX, startY, endX, endY, currentPlayer)) {
 		return true;
 	}
 
-
 	if (dx == 1 && dy == 1) {
-
-		//Check if destination is empty
+		// Check if destination is empty
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
 
-		//Normal pieces may only move forward
+		// Normal pieces may only move forward
 		if (!piece.isKing && ((currentPlayer == Piece::Type::BLACK && endY <= startY) ||
 			(currentPlayer == Piece::Type::WHITE && endY >= startY)))
 			return false;
@@ -153,7 +122,7 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	}
 
 	if (dx == 2 && dy == 2) {
-		//Check if destination is empty
+		// Check if destination is empty
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
 
@@ -162,16 +131,19 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 		Piece midPiece = board[midY][midX];
 		if (midPiece.type == Piece::Type::NONE || midPiece.type == currentPlayer)
+			return false; // No piece or own piece
 
-			return false; //No piece or own piece
+		// Prevent normal pieces from capturing backwards
+		if (!piece.isKing && ((currentPlayer == Piece::Type::BLACK && endY < startY) ||
+			(currentPlayer == Piece::Type::WHITE && endY > startY)))
+			return false;
 
 		return true;
 	}
 
-	return false; //Invalid move
+	return false;
+}
 
-
-};
 
 
 
@@ -205,16 +177,21 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 
 
 
+
+
+
 bool Board::isDiagonalMove(int startX, int startY, int endX, int endY) const {
 	return abs(endX - startX) == abs(endY - startY);
 }
+
+
 
 
 bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) {
 	if (!isValidMove(startX, startY, endX, endY, currentPlayer))
 		return false;
 
-	//Move the Piece
+	
 	board[endY][endX] = board[startY][startX];
 	board[startY][startX] = Piece(Piece::Type::NONE);
 
@@ -230,6 +207,12 @@ bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type cu
 	return true;
 };
 
+
+
+
+
+
+
 void Board::switchPlayer() {
 	if (gameInstance->currentPlayer == Piece::Type::WHITE) {
 		gameInstance->currentPlayer = Piece::Type::BLACK;
@@ -240,6 +223,9 @@ void Board::switchPlayer() {
 		std::cout << "Current Checkers Color = White\n";
 	}
 }
+
+
+
 
 
 bool Board::canContinueTurn(int startX, int startY ) {
@@ -283,6 +269,8 @@ bool Board::canContinueTurn(int startX, int startY ) {
 
 
 
+
+
 void Board::loadTextures() {
 	//Load textures from files
 	whitePieceTexture.loadFromFile("textures/white.png");
@@ -307,6 +295,10 @@ void Board::loadTextures() {
 
 
 };
+
+
+
+
 
 void Board::render(sf::RenderWindow& window) {
 	const float tileSize = 75.0f; // Tile sizing
@@ -366,21 +358,12 @@ void Board::render(sf::RenderWindow& window) {
 	currentPlayerSprite.setScale(7.0f, 7.0f);
 
 
-	
-
-
-
-	
 
 	window.draw(currentPlayerSprite);
 
-	
-
-
-	
-
-	
 };
+
+
 
 
 
