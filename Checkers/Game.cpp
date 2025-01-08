@@ -76,7 +76,7 @@ void Game::loadButtonsTextures()
 
     // Load and configure the play button texture
     if (loadTexture("textures/play_btn.png", playbtnTexture)) {
-        configureSprite(playBtnSprite, playbtnTexture, { 260, 280 }, { 5.5f, 5.5f });
+        configureSprite(playBtnSprite, playbtnTexture, { 267, 280 }, { 5.5f, 5.5f });
     }
 
     // Load and configure the restart button texture
@@ -175,10 +175,10 @@ void Game::render() {
 
     // Render the restart button sprite
     window.draw(restartButtonSprite);
-    logoTextureSprite.setPosition(15, 35);
+    logoTextureSprite.setPosition(20, 25);
     logoTextureSprite.setScale(1.65, 1.65f);
 
-    menuGameExitSprite.setPosition(275, 420);
+    menuGameExitSprite.setPosition(280, 420);
     menuGameExitSprite.setScale(5.0f, 5.0f);
 
     // Render the play button and sprite only if it's visible
