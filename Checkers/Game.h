@@ -8,9 +8,10 @@ class Game {
 private:
         Board board;
     sf::RectangleShape restartButton;
-    sf::RectangleShape playBtn;
+    sf::RectangleShape menuBackground;
     sf::Sprite playBtnSprite;
     bool isPlayButtonVisible = true;  
+    bool victoryScreenVisible = false;
     bool isGameOver;
     sf::RectangleShape logo;
 

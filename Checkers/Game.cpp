@@ -20,6 +20,13 @@ sf::Sprite menuGameExitSprite;
 sf::Texture currentPlayerFrameTexture;
 sf::Sprite currentPlayerFrameSprite;
 
+sf::Texture victoryTextTexture;
+sf::Sprite victoryTextSprite;
+
+sf::Texture winnerTextTexture;
+sf::Sprite winnerTextSprite;
+
+
 Game::Game()
     : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
@@ -31,8 +38,8 @@ Game::Game()
 
     board.loadTextures();
 
-    playBtn.setSize(sf::Vector2f(900, 720));
-    playBtn.setFillColor(sf::Color(0, 128, 111, 255));
+    menuBackground.setSize(sf::Vector2f(900, 720));
+    menuBackground.setFillColor(sf::Color(0, 128, 111, 255));
     loadButtonsTextures();
 }
 
@@ -87,6 +94,14 @@ void Game::loadButtonsTextures()
     if (loadTexture("textures/current_player_frame.png", currentPlayerFrameTexture)) {
         configureSprite(currentPlayerFrameSprite, currentPlayerFrameTexture, { 630, 200 }, { 2.0f, 2.0f });
     }
+
+    if (loadTexture("textures/victory_text.png", victoryTextTexture)) {
+        configureSprite(victoryTextSprite, victoryTextTexture, { 80, 20 }, { 1.0f, 1.0f });
+    }
+
+    if (loadTexture("textures/victory_text.png", winnerTextTexture)) {
+        configureSprite(winnerTextSprite, winnerTextTexture, { 380, 220 }, { 1.0f, 1.0f });
+    }
 }
 
 void Game::hideMenu() {
@@ -100,6 +115,8 @@ void Game::processInput() {
             window.close();
             return;
         }
+
+        
 
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             int mouseX = event.mouseButton.x;
@@ -123,6 +140,7 @@ void Game::processInput() {
                 std::cout << "Stop button clicked!" << std::endl;
                 window.close();
             }
+
             
         }
     }
@@ -146,14 +164,16 @@ void Game::restartGame() {
     isGameOver = false;
     currentPlayer = Piece::Type::WHITE; // Reset current player
     board.resetBoard();  // Reset the board state
+    victoryScreenVisible = false;
 }
 
 // Update the game state, check for win condition
 void Game::update() {
     // Check if the current player has won
     if (board.checkWinCondition(currentPlayer)) {
-        stopGame(); // Stop the game when a win condition is met
+         // Stop the game when a win condition is met
         std::cout << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << " wins!" << std::endl;
+        victoryScreenVisible = true;
     }
 }
 
@@ -168,7 +188,7 @@ void Game::run() {
 }
 
 void Game::render() {
-    window.clear(sf::Color());   // Clear the window
+    window.clear(sf::Color(0, 24, 30));   // Clear the window
 
     // Render the board and other elements
     board.render(window);
@@ -183,13 +203,14 @@ void Game::render() {
 
     // Render the play button and sprite only if it's visible
     if (isPlayButtonVisible) {
-        window.draw(playBtn);   
+        window.draw(menuBackground);   
         window.draw(playBtnSprite);
         window.draw(logoTextureSprite);
         window.draw(menuGameExitSprite);// Draw the Exit button sprite
     }
     else {
         //Move Exit Button
+        
         menuGameExitSprite.setScale(2.0f, 2.0f);
         menuGameExitSprite.setPosition(650, 530);
         window.draw(menuGameExitSprite);
@@ -198,6 +219,10 @@ void Game::render() {
 
         window.draw(currentPlayerFrameSprite);
     }
+
+    if (victoryScreenVisible) {
+        window.draw(victoryTextSprite);
+    };
 
     // Display everything drawn so far
     window.display();
