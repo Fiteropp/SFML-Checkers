@@ -17,8 +17,11 @@ sf::Sprite logoTextureSprite;
 sf::Texture menuGameExitTexture;
 sf::Sprite menuGameExitSprite;
 
+sf::Texture currentPlayerFrameTexture;
+sf::Sprite currentPlayerFrameSprite;
+
 Game::Game()
-    : window(sf::VideoMode(900, 720), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
+    : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
     board(this) {
 
@@ -73,12 +76,16 @@ void Game::loadButtonsTextures()
 
     // Load and configure the play button texture
     if (loadTexture("textures/play_btn.png", playbtnTexture)) {
-        configureSprite(playBtnSprite, playbtnTexture, { 330, 280 }, { 5.5f, 5.5f });
+        configureSprite(playBtnSprite, playbtnTexture, { 260, 280 }, { 5.5f, 5.5f });
     }
 
     // Load and configure the restart button texture
     if (loadTexture("textures/restart_btn.png", resetButtonTexture)) {
-        configureSprite(restartButtonSprite, resetButtonTexture, { 690, 60 }, { 2.25f, 2.25f });
+        configureSprite(restartButtonSprite, resetButtonTexture, { 610, 20 }, { 2.25f, 2.25f });
+    }
+
+    if (loadTexture("textures/current_player_frame.png", currentPlayerFrameTexture)) {
+        configureSprite(currentPlayerFrameSprite, currentPlayerFrameTexture, { 630, 200 }, { 2.0f, 2.0f });
     }
 }
 
@@ -168,10 +175,10 @@ void Game::render() {
 
     // Render the restart button sprite
     window.draw(restartButtonSprite);
-    logoTextureSprite.setPosition(20, 35);
-    logoTextureSprite.setScale(1.85f, 1.85f);
+    logoTextureSprite.setPosition(15, 35);
+    logoTextureSprite.setScale(1.65, 1.65f);
 
-    menuGameExitSprite.setPosition(342, 420);
+    menuGameExitSprite.setPosition(275, 420);
     menuGameExitSprite.setScale(5.0f, 5.0f);
 
     // Render the play button and sprite only if it's visible
@@ -184,10 +191,12 @@ void Game::render() {
     else {
         //Move Exit Button
         menuGameExitSprite.setScale(2.0f, 2.0f);
-        menuGameExitSprite.setPosition(730, 610);
+        menuGameExitSprite.setPosition(650, 530);
         window.draw(menuGameExitSprite);
 
         window.draw(restartButtonSprite);
+
+        window.draw(currentPlayerFrameSprite);
     }
 
     // Display everything drawn so far

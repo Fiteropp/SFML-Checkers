@@ -1,2 +1,35 @@
-﻿  Board.cpp
-  Checkers.vcxproj -> D:\GitHub\SFML-Checkers\x64\Debug\Checkers.exe
+﻿  Game.cpp
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(110,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(111,23): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,72): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,72): warning C4244:         with
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,72): warning C4244:         [
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,72): warning C4244:             T=float
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,72): warning C4244:         ]
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,64): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,64): warning C4244:         with
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,64): warning C4244:         [
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,64): warning C4244:             T=float
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(115,64): warning C4244:         ]
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,66): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,66): warning C4244:         with
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,66): warning C4244:         [
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,66): warning C4244:             T=float
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,66): warning C4244:         ]
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,58): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,58): warning C4244:         with
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,58): warning C4244:         [
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,58): warning C4244:             T=float
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(118,58): warning C4244:         ]
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,71): warning C4244:         with
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,71): warning C4244:         [
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,71): warning C4244:             T=float
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,71): warning C4244:         ]
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,63): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,63): warning C4244:         with
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,63): warning C4244:         [
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,63): warning C4244:             T=float
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(122,63): warning C4244:         ]
+C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\Checkers\Game.cpp(179,32): warning C4305: 'argument': truncation from 'double' to 'float'
+  Checkers.vcxproj -> C:\Users\Järjestelmänvalvoja\Documents\Visual Studio 2022\Projects\SFML-Checkers\x64\Debug\Checkers.exe

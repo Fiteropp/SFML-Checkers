@@ -334,7 +334,7 @@ void Board::render(sf::RenderWindow& window) {
 		for (int x = 0; x < 8; ++x) {
 			// Draw board tiles
 			sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
-			tile.setPosition(x * tileSize + offsetX, y * tileSize + offsetY);
+			tile.setPosition(x * tileSize, y * tileSize);
 
 			if ((x + y) % 2 == 0) {
 				tile.setFillColor(sf::Color(172, 199, 216)); // Light tile
@@ -357,7 +357,7 @@ void Board::render(sf::RenderWindow& window) {
 				}
 
 				// Set sprite position
-				pieceSprite.setPosition(x * tileSize + offsetX, y * tileSize + offsetY);
+				pieceSprite.setPosition(x * tileSize, y * tileSize);
 
 				// Scale sprite if needed
 				pieceSprite.setScale(tileSize / pieceSprite.getLocalBounds().width,
@@ -368,11 +368,7 @@ void Board::render(sf::RenderWindow& window) {
 		}
 	}
 
-	
-	
 
-
-	
 
 	if (gameInstance->currentPlayer == Piece::Type::WHITE) {
 		currentPlayerSprite.setTexture(whitePlayerSquareTexture);
@@ -382,8 +378,8 @@ void Board::render(sf::RenderWindow& window) {
 	}
 
 	// Adjust the position and scale of the player square sprite
-	currentPlayerSprite.setPosition(740, 250);
-	currentPlayerSprite.setScale(4.0f, 4.0f);
+	currentPlayerSprite.setPosition(650, 220);
+	currentPlayerSprite.setScale(7.0f, 7.0f);
 
 
 	
