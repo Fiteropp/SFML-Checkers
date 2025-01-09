@@ -131,46 +131,31 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 
 bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
-	// Check if the move is diagonal
 	if (!isDiagonalMove(startX, startY, endX, endY)) {
-		return false; // Not a valid diagonal move
+		return false;
 	}
 
-	// Calculate the step direction (either -1 or 1)
 	int dx = (endX - startX) > 0 ? 1 : -1;
 	int dy = (endY - startY) > 0 ? 1 : -1;
 
-	// Iterate over all squares between the start and end positions
 	int currentX = startX + dx;
 	int currentY = startY + dy;
 
-	// Loop through all the squares between the start and end
 	while (currentX != endX && currentY != endY) {
 		const Piece& currentPiece = board[currentY][currentX];
 
-		// If the square is occupied, check if it's the opponent's piece
 		if (currentPiece.type != Piece::Type::NONE) {
-			if (currentPiece.type == currentPlayer) {
-				return false; // The king cannot jump over its own pieces
-			}
-			else {
-				// We found an opponent's piece, now check if the jump ends at an empty square
-				if (board[endY][endX].type == Piece::Type::NONE) {
-					return true; // Valid capture move
-				}
-				else {
-					return false; // The end square is not empty, so no valid capture
-				}
-			}
+			return false; 
 		}
 
-		// Move to the next square
 		currentX += dx;
 		currentY += dy;
 	}
 
-	return false; // If no capture is performed, return false
+	return board[endY][endX].type == Piece::Type::NONE;
 }
+
+
 
 
 bool Board::isDiagonalMove(int startX, int startY, int endX, int endY) const {
