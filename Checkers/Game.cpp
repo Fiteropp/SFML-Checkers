@@ -99,8 +99,8 @@ void Game::loadButtonsTextures()
         configureSprite(victoryTextSprite, victoryTextTexture, { 80, 20 }, { 1.0f, 1.0f });
     }
 
-    if (loadTexture("textures/victory_text.png", winnerTextTexture)) {
-        configureSprite(winnerTextSprite, winnerTextTexture, { 380, 220 }, { 1.0f, 1.0f });
+    if (loadTexture("textures/winner_text.png", winnerTextTexture)) {
+        configureSprite(winnerTextSprite, winnerTextTexture, { 190, 220 }, { 1.0f, 1.0f });
     }
 }
 
@@ -163,7 +163,7 @@ void Game::restartGame() {
     std::cout << "Restarting Game..." << std::endl;
     isGameOver = false;
     currentPlayer = Piece::Type::WHITE; // Reset current player
-    board.resetBoard();  // Reset the board state
+    board.initializeBoard();  // Reset the board state
     victoryScreenVisible = false;
 }
 
@@ -209,8 +209,6 @@ void Game::render() {
         window.draw(menuGameExitSprite);// Draw the Exit button sprite
     }
     else {
-        //Move Exit Button
-        
         menuGameExitSprite.setScale(2.0f, 2.0f);
         menuGameExitSprite.setPosition(650, 530);
         window.draw(menuGameExitSprite);
@@ -222,6 +220,7 @@ void Game::render() {
 
     if (victoryScreenVisible) {
         window.draw(victoryTextSprite);
+        window.draw(winnerTextSprite);
     };
 
     // Display everything drawn so far

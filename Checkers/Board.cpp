@@ -33,17 +33,6 @@ Board::Board(Game* game) : gameInstance(game) {
 	float nextToBoardX = 8 * tileSize + 175;       // Position to the right of the board, with an offset of 50
 	whiteSquare.setPosition(320, 328);
 
-
-	
-	
-	
-	
-	
-
-
-	
-	
-	// Position next to the board
 }
 
 
@@ -65,26 +54,6 @@ void Board::initializeBoard() {
 	}
 };
 
-void Board::resetBoard() {
-	for (int i = 0; i < 8; ++i) {
-		for (int j = 0; j < 8; ++j) {
-			if ((i + j) % 2 != 0) { // Only place pieces on black squares
-				if (i < 3) {
-					board[i][j] = Piece(Piece::Type::BLACK, false); // Black pieces, no coords
-				}
-				else if (i > 4) {
-					board[i][j] = Piece(Piece::Type::WHITE, false); // White pieces, no coords
-				}
-				else {
-					board[i][j] = Piece(Piece::Type::NONE, false); // Empty squares
-				}
-			}
-			else {
-				board[i][j] = Piece(Piece::Type::NONE, false); // Empty squares
-			}
-		}
-	}
-}
 
 void Board::resGame() {
 	// Reinitialize the board
@@ -96,17 +65,6 @@ void Board::resGame() {
 	// Optionally, print something to debug
 	std::cout << "Game Restarted!" << std::endl;
 }
-
-
-
-void Board::handleButtonClick(int x, int y) {
-	
-	
-	std::cout << "Mouse click at: " << x << ", " << y << std::endl;
-
-	
-}
-
 
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
@@ -169,13 +127,7 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	}
 
 	return false; //Invalid move
-
-
 };
-
-
-
-
 
 
 bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
@@ -326,8 +278,6 @@ void Board::loadTextures() {
 
 void Board::render(sf::RenderWindow& window) {
 	const float tileSize = 75.0f; // Tile sizing
-	const float offsetX = 60.0f; // Horizontal offset
-	const float offsetY = 60.0f; // Vertical offset
 
 	// Draw the board
 	for (int y = 0; y < 8; ++y) {
