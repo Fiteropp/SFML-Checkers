@@ -5,26 +5,42 @@
 
 #define DEBUG // Comment this out to disable debug mode
 
+
+//Reset button
 sf::Texture resetButtonTexture;
 sf::Sprite restartButtonSprite;
 
+//Play Button in menu
 sf::Texture playbtnTexture;
 sf::Sprite playBtnSprite;
 
+//Logo in menu
 sf::Texture logoTexture;
 sf::Sprite logoTextureSprite;
 
+//Exit button in menu
 sf::Texture menuGameExitTexture;
 sf::Sprite menuGameExitSprite;
 
+//CurrentPlayer Frame
 sf::Texture currentPlayerFrameTexture;
 sf::Sprite currentPlayerFrameSprite;
 
+//Victory texture on winner screen
 sf::Texture victoryTextTexture;
 sf::Sprite victoryTextSprite;
 
+//Winner text
 sf::Texture winnerTextTexture;
 sf::Sprite winnerTextSprite;
+
+//Black checker
+sf::Texture playerWinnerTextureBlack;
+sf::Sprite playerWinnerSpriteBlack;
+
+//White checker
+sf::Texture playerWinnerTextureWhite;
+sf::Sprite playerWinnerSpriteWhite;
 
 
 Game::Game()
@@ -35,8 +51,13 @@ Game::Game()
 
     board.loadTextures();
 
-    menuBackground.setSize(sf::Vector2f(900, 720));
+    menuBackground.setSize(sf::Vector2f(800, 600));
     menuBackground.setFillColor(sf::Color(0, 128, 111, 255));
+
+    winScreenBackground.setSize(sf::Vector2f(800, 150));
+    winScreenBackground.setFillColor(sf::Color(116, 123, 123, 220));
+    winScreenBackground.setPosition(0, 230);
+
     loadButtonsTextures();
 }
 
@@ -48,12 +69,12 @@ bool Game::loadTexture(const std::string& filePath, sf::Texture& texture) {
 #ifdef DEBUG
         std::cerr << "Failed to load texture: " << filePath << std::endl;
 #endif
-        return false; // Indicate failure
+        return false; 
     }
 #ifdef DEBUG
     std::cout << "Successfully loaded texture: " << filePath << std::endl;
 #endif
-    return true; // Indicate success
+    return true; 
 }
 
 void Game::configureSprite(sf::Sprite& sprite, sf::Texture& texture,
@@ -73,36 +94,50 @@ void Game::loadButtonsTextures()
         configureSprite(menuGameExitSprite, menuGameExitTexture);
     }
 
-    // Load and configure the logo texture
+    // logo texture
     if (loadTexture("textures/logo.png", logoTexture)) {
         configureSprite(logoTextureSprite, logoTexture);
     }
 
-    // Load and configure the play button texture
+    // play button texture
     if (loadTexture("textures/play_btn.png", playbtnTexture)) {
         configureSprite(playBtnSprite, playbtnTexture, { 267, 280 }, { 5.5f, 5.5f });
     }
 
-    // Load and configure the restart button texture
+    // restart button texture
     if (loadTexture("textures/restart_btn.png", resetButtonTexture)) {
         configureSprite(restartButtonSprite, resetButtonTexture, { 610, 20 }, { 2.25f, 2.25f });
     }
 
+    // current player frame
     if (loadTexture("textures/current_player_frame.png", currentPlayerFrameTexture)) {
         configureSprite(currentPlayerFrameSprite, currentPlayerFrameTexture, { 630, 200 }, { 2.0f, 2.0f });
     }
 
+    // victory text texture
     if (loadTexture("textures/victory_text.png", victoryTextTexture)) {
         configureSprite(victoryTextSprite, victoryTextTexture, { 80, 20 }, { 1.0f, 1.0f });
     }
 
+    // winner text texture
     if (loadTexture("textures/winner_text.png", winnerTextTexture)) {
-        configureSprite(winnerTextSprite, winnerTextTexture, { 190, 220 }, { 1.0f, 1.0f });
+        configureSprite(winnerTextSprite, winnerTextTexture, { 180, 270 }, { 1.0f, 1.0f });
     }
+
+    // white checker texture
+    if (loadTexture("textures/white_king.png", playerWinnerTextureWhite)) {
+        configureSprite(playerWinnerSpriteWhite, playerWinnerTextureWhite, { 85, 270 }, { 5.0f, 5.0f });
+    }
+
+    // white black texture
+    if (loadTexture("textures/black_king.png", playerWinnerTextureBlack)) {
+        configureSprite(playerWinnerSpriteBlack, playerWinnerTextureBlack, { 85, 270 }, { 5.0f, 5.0f });
+    }
+    
 }
 
 void Game::hideMenu() {
-    isPlayButtonVisible = false;  // Set the flag to hide the play button
+    isMenuVisible = false;  
 }
 
 void Game::processInput() {
@@ -113,18 +148,16 @@ void Game::processInput() {
             return;
         }
 
-        
-
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             int mouseX = event.mouseButton.x;
             int mouseY = event.mouseButton.y;
 
             const float tileSize = 75;
 
-            int gridX = mouseX / tileSize; // Assuming tile size is 50px
+            int gridX = mouseX / tileSize; 
             int gridY = mouseY / tileSize;
 
-            board.handleClick(gridX, gridY, currentPlayer);  // Handle click on the board
+            board.handleClick(gridX, gridY, currentPlayer);  
 
             if (restartButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
                 restartGame();
@@ -137,8 +170,6 @@ void Game::processInput() {
                 std::cout << "Stop button clicked!" << std::endl;
                 window.close();
             }
-
-            
         }
     }
 }
@@ -159,16 +190,16 @@ void Game::stopGame() {
 void Game::restartGame() {
     std::cout << "Restarting Game..." << std::endl;
     isGameOver = false;
-    currentPlayer = Piece::Type::WHITE; // Reset current player
-    board.initializeBoard();  // Reset the board state
+    currentPlayer = Piece::Type::WHITE; 
+    board.initializeBoard();  
     victoryScreenVisible = false;
 }
 
 // Update the game state, check for win condition
 void Game::update() {
-    // Check if the current player has won
+   
     if (board.checkWinCondition(currentPlayer)) {
-         // Stop the game when a win condition is met
+         
         std::cout << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << " wins!" << std::endl;
         victoryScreenVisible = true;
     }
@@ -176,7 +207,7 @@ void Game::update() {
 
 // Main game loop
 void Game::run() {
-    // Main game loop
+    
     while (window.isOpen()) {
         processInput(); 
         update();       
@@ -185,25 +216,24 @@ void Game::run() {
 }
 
 void Game::render() {
-    window.clear(sf::Color(0, 24, 30));   // Clear the window
+    window.clear(sf::Color(0, 24, 30));   
 
-    // Render the board and other elements
     board.render(window);
 
-    // Render the restart button sprite
     window.draw(restartButtonSprite);
+
     logoTextureSprite.setPosition(20, 25);
     logoTextureSprite.setScale(1.65, 1.65f);
 
     menuGameExitSprite.setPosition(280, 420);
     menuGameExitSprite.setScale(5.0f, 5.0f);
 
-    // Render the play button and sprite only if it's visible
-    if (isPlayButtonVisible) {
+    //open and close menu
+    if (isMenuVisible) {
         window.draw(menuBackground);   
         window.draw(playBtnSprite);
         window.draw(logoTextureSprite);
-        window.draw(menuGameExitSprite);// Draw the Exit button sprite
+        window.draw(menuGameExitSprite);
     }
     else {
         menuGameExitSprite.setScale(2.0f, 2.0f);
@@ -215,11 +245,16 @@ void Game::render() {
         window.draw(currentPlayerFrameSprite);
     }
 
+    //win screen
     if (victoryScreenVisible) {
+        
+        window.draw(winScreenBackground);
         window.draw(victoryTextSprite);
         window.draw(winnerTextSprite);
+        
+
+        currentPlayer == Piece::Type::BLACK ? window.draw(playerWinnerSpriteBlack) : window.draw(playerWinnerSpriteWhite);
     };
 
-    // Display everything drawn so far
     window.display();
 }

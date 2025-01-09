@@ -10,3 +10,13 @@
 /x64/Debug
 /Checkers/x64/Debug
 /Checkers/x64
+Checkers/x64/Debug/Board.obj
+Checkers/x64/Debug/Checkers.ilk
+Checkers/x64/Debug/Checkers.log
+Checkers/x64/Debug/Checkers.tlog/CL.command.1.tlog
+Checkers/x64/Debug/Checkers.tlog/CL.read.1.tlog
+Checkers/x64/Debug/Checkers.tlog/CL.write.1.tlog
+Checkers/x64/Debug/Game.obj
+Checkers/x64/Debug/Main.obj
+Checkers/x64/Debug/vc143.idb
+Checkers/x64/Debug/vc143.pdb
