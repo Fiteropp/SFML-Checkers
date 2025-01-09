@@ -32,9 +32,6 @@ Game::Game()
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
     board(this) {
 
-    logo.setSize(sf::Vector2f(50.0f, 50.0f));
-    logo.setFillColor(sf::Color::White);
-    logo.setSize(sf::Vector2f(100, 50));
 
     board.loadTextures();
 
