@@ -9,3 +9,4 @@
 *.obj
 /x64/Debug
 /Checkers/x64/Debug
+/Checkers/x64
