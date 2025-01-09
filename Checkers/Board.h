@@ -1,19 +1,41 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "Piece.h"
+#include <SFML/Graphics.hpp>
+
+class Game;
+
 class Board {
 private:
-	Piece board[8][8];
-	void initializeBoard();
+    sf::RectangleShape whiteSquare;  
+    sf::RectangleShape stopButton;
+    sf::RectangleShape restartButton;
+    
+   
+    Piece board[8][8];
+    
+    Game* gameInstance;
+
 public:
-	Board();
+    Board(Game* game);
 
-	bool isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
-	bool movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
-	void handleClick(int gridX, int gridY, Piece::Type currentPlayer);
-	void render(sf::RenderWindow& window);
-	void loadTextures();
+    void initializeBoard();
 
+    bool isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const;
+    bool movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
+    bool isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const;
+    bool isDiagonalMove(int startX, int startY, int endX, int endY) const;
+    bool canContinueTurn(int startX, int startY);
+    void handleClick(int gridX, int gridY, Piece::Type& currentPlayer);
+    void render(sf::RenderWindow& window);
+    void switchPlayer();
+    void loadTextures();
+    bool checkWinCondition(Piece::Type currentPlayer) const;
+
+    void handleButtonClick(int x, int y);
+    void resGame();
+    void resetBoard();
 };
 
 #endif

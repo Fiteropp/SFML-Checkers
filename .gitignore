@@ -1,1 +1,10 @@
 .vs
+*.tlog
+*.ilk
+*.ilk
+*.log
+*.tlog
+*.obj
+*.idb
+*.obj
+/x64/Debug

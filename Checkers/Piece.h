@@ -1,10 +1,26 @@
-class Piece
-{
+#ifndef PIECE_H
+#define PIECE_H
+
+class Piece {
 public:
-	enum Type { NONE, BLACK, WHITE };
+    enum class Type {
+        NONE,
+        WHITE,
+        BLACK
+    };
 
-	Type type;
-	bool isKing;
+    Type type;
+    bool isKing;
+    
+    bool isPieceKing() const;
+    void promoteToKing();
 
-	Piece(Type t = NONE, bool king = false) : type(t), isKing(king) {};
-};
+
+
+    // Constructor
+    Piece(Type type = Type::NONE, bool isKing = false)
+        : type(type), isKing(isKing) {
+    }
+    };
+
+#endif
