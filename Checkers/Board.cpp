@@ -180,7 +180,7 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
 	if (!isDiagonalMove(startX, startY, endX, endY)) {
-		return false; // Not a valid diagonal move
+		return false;
 	}
 
 	int dx = (endX - startX) > 0 ? 1 : -1;
@@ -193,14 +193,14 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 		const Piece& currentPiece = board[currentY][currentX];
 
 		if (currentPiece.type != Piece::Type::NONE) {
-			return false; // Path is not clear, invalid move
+			return false; 
 		}
 
 		currentX += dx;
 		currentY += dy;
 	}
 
-	return board[endY][endX].type == Piece::Type::NONE; // Destination must be empty
+	return board[endY][endX].type == Piece::Type::NONE;
 }
 
 
