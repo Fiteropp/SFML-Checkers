@@ -62,35 +62,31 @@ void Board::resGame() {
 	// Reset any other necessary game state, e.g., currentPlayer
 	gameInstance->currentPlayer = Piece::Type::WHITE;  // Example reset
 
-	// Optionally, print something to debug
-	std::cout << "Game Restarted!" << std::endl;
+
 }
 
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
-	//Check if start and end coordinates are valid
+
 	if (startX < 0 || startX >= 8 || startY < 0 || startY >= 8 ||
 		endX < 0 || endX >= 8 || endY < 0 || endY >= 8)
 		return false;
 
-	//Get piece moving
+	
 	Piece piece = board[startY][startX];
 	if (piece.type == Piece::Type::NONE || piece.type != currentPlayer) {
-		std::cout << "Invalid piece selected\n";
 		return false;
 	}
 
 
-	//Check if destination is empty
+	
 	if (board[startY][startX].type == Piece::Type::NONE) {
-		std::cout << "Destination is empty\n";
 		return false;
 	}
 
 
-	//Calculate distances
-	int dx = abs(endX - startX); //Horizontal
-	int dy = abs(endY - startY); //Vertical
+	int dx = abs(endX - startX); 
+	int dy = abs(endY - startY); 
 
 	if (board[startY][startX].isKing && isValidKingMove(startX, startY, endX, endY, currentPlayer)) {
 		return true;
@@ -99,11 +95,11 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 	if (dx == 1 && dy == 1) {
 
-		//Check if destination is empty
+		
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
 
-		//Normal pieces may only move forward
+		
 		if (!piece.isKing && ((currentPlayer == Piece::Type::BLACK && endY <= startY) ||
 			(currentPlayer == Piece::Type::WHITE && endY >= startY)))
 			return false;
@@ -111,7 +107,7 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 	}
 
 	if (dx == 2 && dy == 2) {
-		//Check if destination is empty
+		
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
 
@@ -121,12 +117,12 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 		Piece midPiece = board[midY][midX];
 		if (midPiece.type == Piece::Type::NONE || midPiece.type == currentPlayer)
 
-			return false; //No piece or own piece
+			return false;
 
 		return true;
 	}
 
-	return false; //Invalid move
+	return false; 
 };
 
 
@@ -235,7 +231,7 @@ bool Board::canContinueTurn(int startX, int startY ) {
 			Piece midPiece = board[midY][midX];
 			
 
-			// Check if mid position contains an opponent piece and end position is empty
+			
 			if (midPiece.type != Piece::Type::NONE && // Opponent's piece
 				midPiece.type != gameInstance->currentPlayer && // Not current player's piece
 				board[endY][endX].type == Piece::Type::NONE) { // End position is empty
@@ -268,19 +264,13 @@ void Board::loadTextures() {
 
 
 	if (!whitePlayerSquareTexture.loadFromFile("textures/white_king.png")) {
-		std::cout << "Failed to load white player square texture!" << std::endl;
+		std::cout << "failed to load white player square  " << std::endl;
 	}
-	else {
-		std::cout << "White player square texture loaded successfully!" << std::endl;
-	}
+	
 
 	if (!blackPlayerSquareTexture.loadFromFile("textures/black_king.png")) {
-		std::cout << "Failed to load black player square texture!" << std::endl;
+		std::cout << "failed to load black player square texture" << std::endl;
 	}
-	else {
-		std::cout << "Black player square texture loaded successfully!" << std::endl;
-	}
-
 
 };
 

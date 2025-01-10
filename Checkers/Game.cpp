@@ -63,16 +63,14 @@ Game::Game()
 
 
 
-// Function to load textures
 bool Game::loadTexture(const std::string& filePath, sf::Texture& texture) {
     if (!texture.loadFromFile(filePath)) {
 #ifdef DEBUG
-        std::cerr << "Failed to load texture: " << filePath << std::endl;
+        std::cerr << "Failed to load texture " << filePath << std::endl;
 #endif
         return false; 
     }
 #ifdef DEBUG
-    std::cout << "Successfully loaded texture: " << filePath << std::endl;
 #endif
     return true; 
 }
@@ -167,7 +165,7 @@ void Game::processInput() {
             }
 
             if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
-                std::cout << "Stop button clicked!" << std::endl;
+                std::cout << "Exit button clicked" << std::endl;
                 window.close();
             }
         }
@@ -181,21 +179,19 @@ void Game::stopGame() {
     if (window.isOpen()) {
         window.close();
     }
-    else {
-        std::cerr << "Window is already closed!" << std::endl;
-    }
+
 }
 
-// Restart the game
+
 void Game::restartGame() {
-    std::cout << "Restarting Game..." << std::endl;
+    std::cout << "Restarting Game" << std::endl;
     isGameOver = false;
     currentPlayer = Piece::Type::WHITE; 
     board.initializeBoard();  
     victoryScreenVisible = false;
 }
 
-// Update the game state, check for win condition
+
 void Game::update() {
    
     if (board.checkWinCondition(currentPlayer)) {
@@ -206,7 +202,7 @@ void Game::update() {
     }
 }
 
-// Main game loop
+
 void Game::run() {
     
     while (window.isOpen()) {
@@ -217,7 +213,7 @@ void Game::run() {
 }
 
 void Game::render() {
-    window.clear(sf::Color(0, 24, 30));   // Clear the window
+    window.clear(sf::Color(0, 24, 30));   
 
     board.render(window);
 
@@ -229,7 +225,7 @@ void Game::render() {
     menuGameExitSprite.setPosition(280, 420);
     menuGameExitSprite.setScale(5.0f, 5.0f);
 
-    //open and close menu
+    
     if (isMenuVisible) {
         window.draw(menuBackground);   
         window.draw(playBtnSprite);
@@ -246,7 +242,7 @@ void Game::render() {
         window.draw(currentPlayerFrameSprite);
     }
 
-    //win screen
+    
     if (victoryScreenVisible) {
         
         window.draw(winScreenBackground);
