@@ -140,20 +140,25 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 
 	int currentX = startX + dx;
 	int currentY = startY + dy;
+	bool hasCaptured = false;
 
 	while (currentX != endX && currentY != endY) {
 		const Piece& currentPiece = board[currentY][currentX];
 
 		if (currentPiece.type != Piece::Type::NONE) {
-			return false; 
+			if (currentPiece.type == currentPlayer || hasCaptured) {
+				return false; 
+			}
+			hasCaptured = true;
 		}
 
 		currentX += dx;
 		currentY += dy;
 	}
 
-	return board[endY][endX].type == Piece::Type::NONE;
+	return board[endY][endX].type == Piece::Type::NONE && hasCaptured;
 }
+
 
 
 
@@ -163,25 +168,43 @@ bool Board::isDiagonalMove(int startX, int startY, int endX, int endY) const {
 }
 
 
+
 bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) {
 	if (!isValidMove(startX, startY, endX, endY, currentPlayer))
 		return false;
 
-	//Move the Piece
+	// Move the Piece
 	board[endY][endX] = board[startY][startX];
 	board[startY][startX] = Piece(Piece::Type::NONE);
 
 	if (abs(endX - startX) == 2) {
 		int midX = (startX + endX) / 2;
 		int midY = (startY + endY) / 2;
-		board[midY][midX] = Piece(Piece::Type::NONE); // Remove captured piece
+		board[midY][midX] = Piece(Piece::Type::NONE); 
+	}
+	else if (board[endY][endX].isKing) {
+		
+		int dx = (endX - startX) > 0 ? 1 : -1;
+		int dy = (endY - startY) > 0 ? 1 : -1;
+		int currentX = startX + dx;
+		int currentY = startY + dy;
+
+		while (currentX != endX && currentY != endY) {
+			if (board[currentY][currentX].type != Piece::Type::NONE && board[currentY][currentX].type != currentPlayer) {
+				board[currentY][currentX] = Piece(Piece::Type::NONE); 
+				break;
+			}
+			currentX += dx;
+			currentY += dy;
+		}
 	}
 
 	if ((currentPlayer == Piece::Type::BLACK && endY == 7) || (currentPlayer == Piece::Type::WHITE && endY == 0)) {
 		board[endY][endX].isKing = true;
 	}
 	return true;
-};
+}
+
 
 void Board::switchPlayer() {
 	if (gameInstance->currentPlayer == Piece::Type::WHITE) {
