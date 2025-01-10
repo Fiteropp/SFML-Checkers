@@ -188,7 +188,7 @@ void Game::run() {
 }
 
 void Game::render() {
-    window.clear(sf::Color(0, 24, 30));   // Clear the window
+    window.clear(sf::Color(5, 44, 54));   // Clear the window
 
     // Render the board and other elements
     board.render(window);
