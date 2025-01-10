@@ -410,45 +410,52 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 
 
 bool Board::checkWinCondition(Piece::Type currentPlayer) const {
-	bool hasOpponentPieces = false;
+	int whitePieces = 0;
+	int blackPieces = 0;
 	bool canMove = false;
-
 
 	for (int y = 0; y < 8; ++y) {
 		for (int x = 0; x < 8; ++x) {
 			const Piece& piece = board[y][x];
 
-
-			//Check if there are any opponent pieces remaining
-			if (piece.type != Piece::Type::NONE && piece.type != currentPlayer) {
-				hasOpponentPieces = true;
+			// Count the number of pieces for each player
+			if (piece.type == Piece::Type::WHITE) {
+				whitePieces++;
+			}
+			else if (piece.type == Piece::Type::BLACK) {
+				blackPieces++;
 			}
 
-
-			//Check if current player's pieces can make a move
+			// Check if the current player's pieces can make a move
 			if (piece.type == currentPlayer) {
-				//Check possible moves
 				for (int dy = -1; dy <= 1; ++dy) {
 					for (int dx = -1; dx <= 1; ++dx) {
 						if (dx == 0 || dy == 0) continue;
 
-
 						int newX = x + dx;
 						int newY = y + dy;
-
 
 						if (isValidMove(x, y, newX, newY, currentPlayer)) {
 							canMove = true;
 							break;
 						}
 					}
+					if (canMove) break;
 				}
 			}
 		}
 	}
-	//Return GameOver if cant move or no pieces left
-	return !hasOpponentPieces || !canMove;
+
+
+
+	if (currentPlayer == Piece::Type::WHITE) {
+		return blackPieces == 0 || !canMove;
+	}
+	else {
+		return whitePieces == 0 || !canMove;
+	}
 }
+
 
 
 	

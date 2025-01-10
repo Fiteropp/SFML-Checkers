@@ -44,10 +44,9 @@ sf::Sprite playerWinnerSpriteWhite;
 
 
 Game::Game()
-    : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close), 
+    : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close),
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
-    board(this) {
-
+    board(this), victoryScreenVisible(false) { 
 
     board.loadTextures();
 
@@ -60,6 +59,7 @@ Game::Game()
 
     loadButtonsTextures();
 }
+
 
 
 
@@ -200,8 +200,9 @@ void Game::update() {
    
     if (board.checkWinCondition(currentPlayer)) {
          
-        std::cout << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << " wins!" << std::endl;
+        
         victoryScreenVisible = true;
+
     }
 }
 
@@ -253,7 +254,7 @@ void Game::render() {
         window.draw(winnerTextSprite);
         
 
-        currentPlayer == Piece::Type::BLACK ? window.draw(playerWinnerSpriteBlack) : window.draw(playerWinnerSpriteWhite);
+        currentPlayer == Piece::Type::BLACK ? window.draw(playerWinnerSpriteWhite) : window.draw(playerWinnerSpriteBlack);
     };
 
     window.display();
