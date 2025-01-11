@@ -152,7 +152,7 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 		currentY += dy;
 	}
 
-	return board[endY][endX].type == Piece::Type::NONE && hasCaptured;
+	return board[endY][endX].type == Piece::Type::NONE;
 }
 
 
