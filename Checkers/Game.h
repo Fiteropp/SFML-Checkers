@@ -11,7 +11,7 @@ private:
     sf::RectangleShape winScreenBackground;
     sf::Sprite playBtnSprite;
     bool isMenuVisible = true;  
-    bool victoryScreenVisible = true;
+    bool victoryScreenVisible = false;
     bool isGameOver;
     
 

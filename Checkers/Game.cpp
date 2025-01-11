@@ -34,6 +34,10 @@ sf::Sprite victoryTextSprite;
 sf::Texture winnerTextTexture;
 sf::Sprite winnerTextSprite;
 
+//Close button
+sf::Texture closeVictoryScreenBtnTexture;
+sf::Sprite  closeVictoryScreenBtnSprite;
+
 //Black checker
 sf::Texture playerWinnerTextureBlack;
 sf::Sprite playerWinnerSpriteBlack;
@@ -46,16 +50,16 @@ sf::Sprite playerWinnerSpriteWhite;
 Game::Game()
     : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close),
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
-    board(this), victoryScreenVisible(false) { 
+    board(this), victoryScreenVisible(true) { 
 
     board.loadTextures();
 
     menuBackground.setSize(sf::Vector2f(800, 600));
     menuBackground.setFillColor(sf::Color(0, 128, 111, 255));
 
-    winScreenBackground.setSize(sf::Vector2f(800, 150));
+    winScreenBackground.setSize(sf::Vector2f(800, 180));
     winScreenBackground.setFillColor(sf::Color(116, 123, 123, 220));
-    winScreenBackground.setPosition(0, 230);
+    winScreenBackground.setPosition(0, 240);
 
     loadButtonsTextures();
 }
@@ -121,6 +125,11 @@ void Game::loadButtonsTextures()
     if (loadTexture("textures/winner_text.png", winnerTextTexture)) {
         configureSprite(winnerTextSprite, winnerTextTexture, { 180, 270 }, { 1.0f, 1.0f });
     }
+    
+    // close button
+    if (loadTexture("textures/close_btn.png", closeVictoryScreenBtnTexture)) {
+        configureSprite(closeVictoryScreenBtnSprite, closeVictoryScreenBtnTexture, { 350, 370 }, { 1.5f, 1.5f });
+    }
 
     // white checker texture
     if (loadTexture("textures/white_king.png", playerWinnerTextureWhite)) {
@@ -160,8 +169,13 @@ void Game::processInput() {
             if (restartButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
                 restartGame();
             }
+
             if (playBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
                 hideMenu();
+            }
+
+            if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
+                restartGame();
             }
 
             if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
@@ -235,6 +249,7 @@ void Game::render() {
     else {
         menuGameExitSprite.setScale(2.0f, 2.0f);
         menuGameExitSprite.setPosition(650, 530);
+
         window.draw(menuGameExitSprite);
 
         window.draw(restartButtonSprite);
@@ -248,7 +263,7 @@ void Game::render() {
         window.draw(winScreenBackground);
         window.draw(victoryTextSprite);
         window.draw(winnerTextSprite);
-        
+        window.draw(closeVictoryScreenBtnSprite);
 
         currentPlayer == Piece::Type::BLACK ? window.draw(playerWinnerSpriteWhite) : window.draw(playerWinnerSpriteBlack);
     };

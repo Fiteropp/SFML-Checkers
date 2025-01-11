@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include <iostream> // For debugging
 
+
 sf::Texture whitePieceTexture;
 sf::Texture blackPieceTexture;
 sf::Texture whiteKingTexture;
@@ -17,22 +18,11 @@ sf::Texture blackPlayerSquareTexture;
 
 
 
-
 Board::Board(Game* game) : gameInstance(game) {
-	const float tileSize = 75.0f;
 	
+const float tileSize = 75.0f;
 
-	initializeBoard(); // Initialize the board
-
-	// Initialize the white square
-	whiteSquare.setSize(sf::Vector2f(tileSize, tileSize));  // Set the size of the square
-	whiteSquare.setFillColor(sf::Color::White);        // Set the color to white
-
-	// Position the square next to the board (to the right)
-	float centerY = (8 * tileSize) / 2 - tileSize / 2;  // Calculate the center Y position of the board
-	float nextToBoardX = 8 * tileSize + 175;       // Position to the right of the board, with an offset of 50
-	whiteSquare.setPosition(320, 328);
-
+	initializeBoard(); 
 }
 
 
@@ -53,17 +43,6 @@ void Board::initializeBoard() {
 		}
 	}
 };
-
-
-void Board::resGame() {
-	// Reinitialize the board
-	initializeBoard();
-
-	// Reset any other necessary game state, e.g., currentPlayer
-	gameInstance->currentPlayer = Piece::Type::WHITE;  // Example reset
-
-
-}
 
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
@@ -156,9 +135,6 @@ bool Board::isValidKingMove(int startX, int startY, int endX, int endY, Piece::T
 }
 
 
-
-
-
 bool Board::isDiagonalMove(int startX, int startY, int endX, int endY) const {
 	return abs(endX - startX) == abs(endY - startY);
 }
@@ -197,8 +173,10 @@ bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type cu
 
 	if ((currentPlayer == Piece::Type::BLACK && endY == 7) || (currentPlayer == Piece::Type::WHITE && endY == 0)) {
 		board[endY][endX].isKing = true;
-	}
+	};
+	
 	return true;
+
 }
 
 
@@ -214,15 +192,19 @@ void Board::switchPlayer() {
 }
 
 
-bool Board::canContinueTurn(int startX, int startY ) {
-	int directions[4][2] = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} }; // Diagonal directions
+bool Board::canContinueTurn(int gridX, int gridY ) {
+	int directions[4][2] = { {-1, -1}, {-1, 1}, {1, -1}, {1, 1} }; 
 	bool canContinue = false;
 
 	for (int i = 0; i < 4; i++) {
-		int midX = startY + directions[i][0];
-		int midY = startY + directions[i][1];
-		int endX = startX + 2 * directions[i][0];
-		int endY = startY + 2 * directions[i][1];
+		int midX = gridX + directions[i][0];
+		int midY = gridY + directions[i][1];
+		int endX = gridX + 2 * directions[i][0];
+		int endY = gridY + 2 * directions[i][1];
+
+		std::cout << "Direction " << i << ": mid=(" << midX << ", " << midY
+			<< "), end=(" << endX << ", " << endY << ")\n";
+
 
 		// Check if mid and end positions are valid
 		if (midX >= 0 && midX < 8 && midY >= 0 && midY < 8 &&
@@ -232,11 +214,11 @@ bool Board::canContinueTurn(int startX, int startY ) {
 			
 
 			
-			if (midPiece.type != Piece::Type::NONE && // Opponent's piece
-				midPiece.type != gameInstance->currentPlayer && // Not current player's piece
-				board[endY][endX].type == Piece::Type::NONE) { // End position is empty
+			if (midPiece.type != Piece::Type::NONE && 
+				midPiece.type != gameInstance->currentPlayer && 
+				board[endY][endX].type == Piece::Type::NONE) { 
 				canContinue = true;
-				break; // Exit loop if a valid continuation is found
+				break; 
 			}
 		}
 	}
@@ -250,9 +232,6 @@ bool Board::canContinueTurn(int startX, int startY ) {
 		return false;
 	}
 }
-
-
-
 
 
 void Board::loadTextures() {
@@ -274,8 +253,10 @@ void Board::loadTextures() {
 
 };
 
+
 void Board::render(sf::RenderWindow& window) {
-	const float tileSize = 75.0f; // Tile sizing
+	
+	const float tileSize = 75.0f; 
 
 	// Draw the board
 	for (int y = 0; y < 8; ++y) {
@@ -316,8 +297,6 @@ void Board::render(sf::RenderWindow& window) {
 		}
 	}
 
-
-
 	if (gameInstance->currentPlayer == Piece::Type::WHITE) {
 		currentPlayerSprite.setTexture(whitePlayerSquareTexture);
 	}
@@ -325,27 +304,11 @@ void Board::render(sf::RenderWindow& window) {
 		currentPlayerSprite.setTexture(blackPlayerSquareTexture);
 	}
 
-	// Adjust the position and scale of the player square sprite
 	currentPlayerSprite.setPosition(650, 220);
 	currentPlayerSprite.setScale(7.0f, 7.0f);
 
-
-	
-
-
-
-	
-
 	window.draw(currentPlayerSprite);
-
-	
-
-
-	
-
-	
 };
-
 
 
 
@@ -376,9 +339,9 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
-			if (canContinueTurn(selectedX, selectedY)) {
+			if (canContinueTurn(gridX, gridY)) {
 				handleClick(selectedX, selectedY, currentPlayer);
-			}
+			};
 			currentPlayer = (currentPlayer == Piece::Type::BLACK) ? Piece::Type::WHITE : Piece::Type::BLACK;
 			std::cout << "It's now " << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << "'s turn\n";
 		}
@@ -392,11 +355,6 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 		selectedY = -1;
 	}
 }
-
-
-
-
-
 
 
 bool Board::checkWinCondition(Piece::Type currentPlayer) const {
@@ -436,8 +394,6 @@ bool Board::checkWinCondition(Piece::Type currentPlayer) const {
 		}
 	}
 
-
-
 	if (currentPlayer == Piece::Type::WHITE) {
 		return blackPieces == 0 || !canMove;
 	}
@@ -445,7 +401,3 @@ bool Board::checkWinCondition(Piece::Type currentPlayer) const {
 		return whitePieces == 0 || !canMove;
 	}
 }
-
-
-
-	
