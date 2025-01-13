@@ -11,8 +11,12 @@ private:
     sf::RectangleShape whiteSquare;  
     sf::RectangleShape stopButton;
     sf::RectangleShape restartButton;
+    sf::RectangleShape chosenChecker;
     
-   
+    bool pieceSelected;
+    int selectedX;
+    int selectedY;
+
     Piece board[8][8];
     
     Game* gameInstance;

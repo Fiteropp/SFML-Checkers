@@ -16,9 +16,11 @@ sf::Sprite currentPlayerSprite;
 sf::Texture whitePlayerSquareTexture;
 sf::Texture blackPlayerSquareTexture;
 
+sf::Texture chosenCheckerTexture;
+sf::Sprite chosenCheckerSprite;
 
 
-Board::Board(Game* game) : gameInstance(game) {
+Board::Board(Game* game) : gameInstance(game), pieceSelected(false), selectedX(-1), selectedY(-1) {
 	
 const float tileSize = 75.0f;
 
@@ -236,7 +238,7 @@ void Board::loadTextures() {
 	blackPieceTexture.loadFromFile("textures/black.png");
 	whiteKingTexture.loadFromFile("textures/white_king.png");
 	blackKingTexture.loadFromFile("textures/black_king.png");
-
+	chosenCheckerTexture.loadFromFile("textures/select_frame.png");
 
 	if (!whitePlayerSquareTexture.loadFromFile("textures/white_king.png")) {
 		std::cout << "failed to load white player square  " << std::endl;
@@ -251,8 +253,8 @@ void Board::loadTextures() {
 
 
 void Board::render(sf::RenderWindow& window) {
-	
-	const float tileSize = 75.0f; 
+
+	const float tileSize = 75.0f;
 
 	// Draw the board
 	for (int y = 0; y < 8; ++y) {
@@ -300,6 +302,14 @@ void Board::render(sf::RenderWindow& window) {
 		currentPlayerSprite.setTexture(blackPlayerSquareTexture);
 	}
 
+	if (pieceSelected){
+	chosenCheckerSprite.setTexture(chosenCheckerTexture);
+	chosenCheckerSprite.setPosition(selectedX * tileSize, selectedY * tileSize);
+	chosenCheckerSprite.setScale(tileSize / chosenCheckerSprite.getLocalBounds().width,
+		tileSize / chosenCheckerSprite.getLocalBounds().height);
+	window.draw(chosenCheckerSprite);
+	};
+
 	currentPlayerSprite.setPosition(650, 220);
 	currentPlayerSprite.setScale(7.0f, 7.0f);
 
@@ -309,9 +319,6 @@ void Board::render(sf::RenderWindow& window) {
 
 
 void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
-	static bool pieceSelected = false;
-	static int selectedX = -1, selectedY = -1;
-
 
 	// Handle piece selection and movement if the button is not clicked
 	if (!pieceSelected) {
