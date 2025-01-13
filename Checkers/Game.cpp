@@ -175,7 +175,7 @@ void Game::processInput() {
             }
 
             if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
-                restartGame();
+                victoryScreenVisible = false;
             }
 
             if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
