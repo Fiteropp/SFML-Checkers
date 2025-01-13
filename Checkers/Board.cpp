@@ -202,10 +202,6 @@ bool Board::canContinueTurn(int gridX, int gridY ) {
 		int endX = gridX + 2 * directions[i][0];
 		int endY = gridY + 2 * directions[i][1];
 
-		std::cout << "Direction " << i << ": mid=(" << midX << ", " << midY
-			<< "), end=(" << endX << ", " << endY << ")\n";
-
-
 		// Check if mid and end positions are valid
 		if (midX >= 0 && midX < 8 && midY >= 0 && midY < 8 &&
 			endX >= 0 && endX < 8 && endY >= 0 && endY < 8) {
@@ -316,8 +312,6 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 	static bool pieceSelected = false;
 	static int selectedX = -1, selectedY = -1;
 
-	
-
 
 	// Handle piece selection and movement if the button is not clicked
 	if (!pieceSelected) {
@@ -340,7 +334,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 
 			// Switch player after a valid move
 			if (canContinueTurn(gridX, gridY)) {
-				handleClick(selectedX, selectedY, currentPlayer);
+				return;
 			};
 			currentPlayer = (currentPlayer == Piece::Type::BLACK) ? Piece::Type::WHITE : Piece::Type::BLACK;
 			std::cout << "It's now " << (currentPlayer == Piece::Type::BLACK ? "Black" : "White") << "'s turn\n";
