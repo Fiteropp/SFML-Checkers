@@ -1,0 +1,13 @@
+.vs
+*.tlog
+*.ilk
+*.ilk
+*.log
+*.tlog
+*.obj
+*.idb
+*.obj
+*.exe
+*.pdb
+/Checkers/x64/Debug/
+/Checkers/x64/Release/
