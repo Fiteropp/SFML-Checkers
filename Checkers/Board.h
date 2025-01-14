@@ -17,7 +17,7 @@ private:
     int selectedX;
     int selectedY;
 
-    bool singleMove;
+    bool captureMade;
 
     Piece board[8][8];
     

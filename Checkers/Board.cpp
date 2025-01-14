@@ -148,6 +148,9 @@ bool Board::isDiagonalMove(int startX, int startY, int endX, int endY) const {
 
 
 bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) {
+	
+	captureMade = false;
+
 	if (!isValidMove(startX, startY, endX, endY, currentPlayer))
 		return false;
 
@@ -158,7 +161,8 @@ bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type cu
 	if (abs(endX - startX) == 2) {
 		int midX = (startX + endX) / 2;
 		int midY = (startY + endY) / 2;
-		board[midY][midX] = Piece(Piece::Type::NONE); 
+		board[midY][midX] = Piece(Piece::Type::NONE);
+		captureMade = true;
 	}
 	else if (board[endY][endX].isKing) {
 		
@@ -344,7 +348,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
-			if (canContinueTurn(gridX, gridY) && !singleMove) {
+			if (canContinueTurn(gridX, gridY) && captureMade == true) {
 				return;
 			};
 			currentPlayer = (currentPlayer == Piece::Type::BLACK) ? Piece::Type::WHITE : Piece::Type::BLACK;
