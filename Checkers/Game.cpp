@@ -174,8 +174,8 @@ void Game::processInput() {
                 hideMenu();
             }
 
-            if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
-                victoryScreenVisible = false;
+            if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY) && victoryScreenVisible) {
+                restartGame();
             }
 
             if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
