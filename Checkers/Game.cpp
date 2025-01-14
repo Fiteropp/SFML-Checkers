@@ -50,7 +50,7 @@ sf::Sprite playerWinnerSpriteWhite;
 Game::Game()
     : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close),
     currentPlayer(Piece::Type::WHITE), isGameOver(false),
-    board(this), victoryScreenVisible(false) { 
+    board(this), victoryScreenVisible(false) {  // debug variable fro win screen
 
     board.loadTextures();
 
