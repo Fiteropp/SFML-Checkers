@@ -49,8 +49,6 @@ void Board::initializeBoard() {
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
 
-	bool singleMove = true;
-
 	if (startX < 0 || startX >= 8 || startY < 0 || startY >= 8 ||
 		endX < 0 || endX >= 8 || endY < 0 || endY >= 8)
 		return false;
@@ -77,9 +75,6 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 
 	if (dx == 1 && dy == 1) {
-
-		singleMove = true;
-		
 		
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
