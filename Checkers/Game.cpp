@@ -141,6 +141,19 @@ void Game::loadButtonsTextures()
         configureSprite(playerWinnerSpriteBlack, playerWinnerTextureBlack, { 85, 270 }, { 5.0f, 5.0f });
     }
     
+    loadIcon();
+}
+
+void Game::loadIcon()
+{
+    //loadIcon
+    auto appIcon = sf::Image{};
+    if (!appIcon.loadFromFile("textures/icon.png"))
+    {
+        std::cerr << "Failed to load Icon " << std::endl;
+    }
+
+    window.setIcon(appIcon.getSize().x, appIcon.getSize().y, appIcon.getPixelsPtr());
 }
 
 void Game::hideMenu() {
@@ -234,7 +247,7 @@ void Game::render() {
     window.draw(restartButtonSprite);
 
     logoTextureSprite.setPosition(20, 25);
-    logoTextureSprite.setScale(1.65, 1.65f);
+    logoTextureSprite.setScale(1.65f, 1.65f);
 
     menuGameExitSprite.setPosition(280, 420);
     menuGameExitSprite.setScale(5.0f, 5.0f);

@@ -29,6 +29,7 @@ public:
 
     Game();
     void loadButtonsTextures();
+    void loadIcon();
     void run();
     void stopGame();  
     void restartGame();
