@@ -310,7 +310,7 @@ void Board::render(sf::RenderWindow& window) {
 		currentPlayerSprite.setTexture(blackPlayerSquareTexture);
 	}
 
-	if (pieceSelected){
+	if (pieceSelected && selectedX <= 8 && selectedY <= 8){
 	chosenCheckerSprite.setTexture(chosenCheckerTexture);
 	chosenCheckerSprite.setPosition(selectedX * tileSize, selectedY * tileSize);
 	chosenCheckerSprite.setScale(tileSize / chosenCheckerSprite.getLocalBounds().width,
