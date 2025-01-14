@@ -17,6 +17,8 @@ private:
     int selectedX;
     int selectedY;
 
+    bool singleMove;
+
     Piece board[8][8];
     
     Game* gameInstance;

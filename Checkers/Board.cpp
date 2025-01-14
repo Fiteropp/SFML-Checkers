@@ -49,6 +49,8 @@ void Board::initializeBoard() {
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
 
+	bool singleMove = true;
+
 	if (startX < 0 || startX >= 8 || startY < 0 || startY >= 8 ||
 		endX < 0 || endX >= 8 || endY < 0 || endY >= 8)
 		return false;
@@ -76,6 +78,8 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 	if (dx == 1 && dy == 1) {
 
+		singleMove = true;
+		
 		
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
@@ -340,7 +344,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
-			if (canContinueTurn(gridX, gridY)) {
+			if (canContinueTurn(gridX, gridY) && !singleMove) {
 				return;
 			};
 			currentPlayer = (currentPlayer == Piece::Type::BLACK) ? Piece::Type::WHITE : Piece::Type::BLACK;
