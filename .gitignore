@@ -7,6 +7,7 @@
 *.obj
 *.idb
 *.obj
-/x64/Debug
-/Checkers/x64/Debug
-/Checkers/x64
+*.exe
+*.pdb
+/Checkers/x64/Debug/
+/Checkers/x64/Release/

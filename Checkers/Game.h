@@ -7,13 +7,13 @@
 class Game {
 private:
         Board board;
-    sf::RectangleShape restartButton;
     sf::RectangleShape menuBackground;
+    sf::RectangleShape winScreenBackground;
     sf::Sprite playBtnSprite;
-    bool isPlayButtonVisible = true;  
+    bool isMenuVisible = true;  
     bool victoryScreenVisible = false;
     bool isGameOver;
-    sf::RectangleShape logo;
+    
 
     bool loadTexture(const std::string& filePath, sf::Texture& texture);
     void configureSprite(sf::Sprite& sprite, sf::Texture& texture, sf::Vector2f position = { 0, 0 }, sf::Vector2f scale = { 1.0f, 1.0f });

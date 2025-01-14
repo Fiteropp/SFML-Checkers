@@ -11,8 +11,14 @@ private:
     sf::RectangleShape whiteSquare;  
     sf::RectangleShape stopButton;
     sf::RectangleShape restartButton;
+    sf::RectangleShape chosenChecker;
     
-   
+    bool pieceSelected;
+    int selectedX;
+    int selectedY;
+
+    bool captureMade;
+
     Piece board[8][8];
     
     Game* gameInstance;
@@ -26,16 +32,12 @@ public:
     bool movePiece(int startX, int startY, int endX, int endY, Piece::Type currentPlayer);
     bool isValidKingMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const;
     bool isDiagonalMove(int startX, int startY, int endX, int endY) const;
-    bool canContinueTurn(int startX, int startY);
+    bool canContinueTurn(int gridX, int gridY);
     void handleClick(int gridX, int gridY, Piece::Type& currentPlayer);
     void render(sf::RenderWindow& window);
     void switchPlayer();
     void loadTextures();
     bool checkWinCondition(Piece::Type currentPlayer) const;
-
-    void handleButtonClick(int x, int y);
-    void resGame();
-    void resetBoard();
 };
 
 #endif
