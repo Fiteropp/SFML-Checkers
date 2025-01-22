@@ -35,6 +35,9 @@ cd SFML-Checkers
 - Select **Build Solution** (Ctrl+Shift+B).  
 - Press **F5** to run the application.
 
+## Documentation
+[See documentation](https://github.com/Fiteropp/SFML-Checkers/wiki)
+
 ## Contributing
 
 ### How to Contribute
