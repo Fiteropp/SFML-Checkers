@@ -1,5 +1,7 @@
 # SFML Checkers
 
+![logo](https://github.com/user-attachments/assets/4a83483c-09fb-413a-8921-d664d5359118)
+
 ### Overview
 
 **SFML Checkers** is a graphical implementation of the classic checkers game, built using the [SFML](https://github.com/SFML/SFML) library. It supports local two-player gameplay with intuitive graphics.
@@ -49,4 +51,3 @@ Contributions are welcome! Fork the repo, create a branch, and submit a pull req
 ### License Details
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
