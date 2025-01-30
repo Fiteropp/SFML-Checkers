@@ -18,14 +18,23 @@ sf::Texture blackPlayerSquareTexture;
 
 sf::Texture chosenCheckerTexture;
 sf::Sprite chosenCheckerSprite;
+sf::Font font;
 
-
-Board::Board(Game* game) : gameInstance(game), pieceSelected(false), selectedX(-1), selectedY(-1) {
-	
+Board::Board(Game* game) : gameInstance(game), pieceSelected(false), selectedX(-1), selectedY(-1) {	
 const float tileSize = 75.0f;
 
+	if (!font.loadFromFile("pixel-font/slkscr.ttf")) {
+		 std::cout<<("Failed to load font: pixel-font/slkscr.ttf");
+	}
+	else {
+		std::cout << ("Font loaded successfully\n ");
+	}
+
 	initializeBoard(); 
+
 }
+
+
 
 
 //Place Pieces
