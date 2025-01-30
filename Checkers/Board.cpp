@@ -181,6 +181,7 @@ bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type cu
 	};
 	
 	return true;
+	
 
 }
 
@@ -340,6 +341,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 		// Try to move selected piece
 		if (isValidMove(selectedX, selectedY, gridX, gridY, currentPlayer)) {
 			movePiece(selectedX, selectedY, gridX, gridY, currentPlayer);
+			currentPlayer == Piece::Type::WHITE ? whitePieceMoveCounter++ : blackPieceMoveCounter++;
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
@@ -361,7 +363,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 }
 
 
-bool Board::checkWinCondition(Piece::Type currentPlayer) const {
+bool Board::checkWinCondition(Piece::Type currentPlayer) {
 	int whitePieces = 0;
 	int blackPieces = 0;
 	bool canMove = false;

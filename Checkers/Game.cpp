@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <SFML/Window.hpp>
 #include "SFML/Graphics.hpp"
+#include "Saves.h"
 #include <iostream>
 
 #define DEBUG // Comment this out to disable debug mode
@@ -54,6 +55,13 @@ Game::Game()
 
     board.loadTextures();
 
+    InitializeUI();
+
+    loadButtonsTextures();
+}
+
+void Game::InitializeUI()
+{
     menuBackground.setSize(sf::Vector2f(800, 600));
     menuBackground.setFillColor(sf::Color(0, 128, 111, 255));
 
@@ -61,7 +69,9 @@ Game::Game()
     winScreenBackground.setFillColor(sf::Color(116, 123, 123, 220));
     winScreenBackground.setPosition(0, 240);
 
-    loadButtonsTextures();
+    DebugButton.setSize(sf::Vector2f(80, 60));
+    DebugButton.setFillColor(sf::Color(0, 0, 0, 255));
+    DebugButton.setPosition(600, 400);
 }
 
 
@@ -179,54 +189,91 @@ void Game::processInput() {
 
             board.handleClick(gridX, gridY, currentPlayer);  
 
-            if (restartButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
-                restartGame();
-            }
-
-            if (playBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
-                hideMenu();
-            }
-
-            if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY) && victoryScreenVisible) {
-                restartGame();
-            }
-
-            if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
-                std::cout << "Exit button clicked" << std::endl;
-                window.close();
-            }
+            HandleButtonClicks(mouseX, mouseY);
         }
+    }
+}
+
+void Game::HandleButtonClicks(int mouseX, int mouseY)
+{
+    if (restartButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
+        restartGame();
+    }
+
+    if (playBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
+        hideMenu();
+    }
+
+    if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY) && victoryScreenVisible) {
+        restartGame();
+    }
+
+    if (DebugButton.getGlobalBounds().contains(mouseX, mouseY)) {
+        loadStats();
+    }
+
+    if (menuGameExitSprite.getGlobalBounds().contains(mouseX, mouseY)) {
+        std::cout << "Exit button clicked" << std::endl;
+        stopGame();
     }
 }
 
 // Stop the game
 void Game::stopGame() {
-    std::cout << "Game Over!" << std::endl;
     isGameOver = true;
     if (window.isOpen()) {
         window.close();
     }
 
+        GameStats stats(board.whitePieceWinsCounter, board.blackPieceWinsCounter, board.whitePieceMoveCounter, board.blackPieceMoveCounter);
+
+        // Save Stats
+        stats.saveStatsToFile("game_stats.dat");
+   
 }
 
 
 void Game::restartGame() {
     std::cout << "Restarting Game" << std::endl;
+
     isGameOver = false;
-    currentPlayer = Piece::Type::WHITE; 
-    board.initializeBoard();  
     victoryScreenVisible = false;
+    winRegistered = false;
+
+    currentPlayer = Piece::Type::WHITE;
+    board.initializeBoard();
 }
 
 
 void Game::update() {
-   
-    if (board.checkWinCondition(currentPlayer)) {
-         
-        
-        victoryScreenVisible = true;
+    if (victoryScreenVisible) return; // Prevent multiple updates
 
+    if (board.checkWinCondition(currentPlayer)) {
+        victoryScreenVisible = true;
+        
+        if (!winRegistered) {
+            if (currentPlayer == Piece::Type::BLACK) {
+                board.blackPieceWinsCounter += 1;
+            }
+            else {
+                board.whitePieceWinsCounter += 1;
+            }
+            winRegistered = true; // Mark win as counted
+        }
+        
     }
+}
+
+void Game::loadStats() {
+	// Create a GameStatsBinary object
+	GameStats stats;
+	// Load from a binary file
+	stats.loadSaveFromFile("game_stats.dat");
+	// Display the loaded stats
+	std::cout << "White Wins: " << stats.WhiteWinsScore << std::endl;
+	std::cout << "Black Wins: " << stats.BlackWinsScore << std::endl;
+	std::cout << "White Moves: " << stats.WhiteMovesScore << std::endl;
+	std::cout << "Black Moves: " << stats.BlackMovesScore << std::endl;
 }
 
 
@@ -258,6 +305,7 @@ void Game::render() {
         window.draw(playBtnSprite);
         window.draw(logoTextureSprite);
         window.draw(menuGameExitSprite);
+		window.draw(DebugButton);
     }
     else {
         menuGameExitSprite.setScale(2.0f, 2.0f);
@@ -268,6 +316,8 @@ void Game::render() {
         window.draw(restartButtonSprite);
 
         window.draw(currentPlayerFrameSprite);
+
+        window.draw(DebugButton);
     }
 
     
