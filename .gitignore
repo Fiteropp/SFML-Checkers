@@ -9,5 +9,6 @@
 *.obj
 *.exe
 *.pdb
+*.dat
 /Checkers/x64/Debug/
 /Checkers/x64/Release/
