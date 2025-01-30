@@ -2,24 +2,29 @@
 #include <cstring> // For strncpy
 
 // Constructor
-GameStats::GameStats(int whtWins, int blckWins, int whtMoves, int blckMoves) {
+GameStats::GameStats(int whtWins, int blckWins, int whtMoves, int blckMoves, int gameCounter, double whtWinPercent, double blckWinPercent) {
     WhiteWinsScore = whtWins;
-	BlackWinsScore = blckWins;
-	WhiteMovesScore = whtMoves;
-	BlackMovesScore = blckMoves;
-    
+    BlackWinsScore = blckWins;
+    WhiteMovesScore = whtMoves;
+    BlackMovesScore = blckMoves;
+    GameCounter = whtWins + blckWins;
+	WhiteWinPercent = whtWins == 0 ? 0.0 : (double)whtWins / GameCounter * 100;
+	BlackWinPercent = blckWins == 0 ? 0.0 : (double)blckWins / GameCounter * 100;
 }
 
 // Save stats to a binary file
 void GameStats::saveStatsToFile(const std::string& filename) const {
     // Read existing stats from the file (if any)
-    GameStats existingStats(0, 0, 0, 0);
+    GameStats existingStats(0, 0, 0, 0, 0, 0.0, 0.0);
     std::ifstream inFile(filename);
     if (inFile.is_open()) {
         inFile >> existingStats.WhiteWinsScore
             >> existingStats.BlackWinsScore
             >> existingStats.WhiteMovesScore
-            >> existingStats.BlackMovesScore;
+            >> existingStats.BlackMovesScore
+            >> existingStats.GameCounter
+            >> existingStats.WhiteWinPercent
+            >> existingStats.BlackWinPercent;
         inFile.close();
     }
 
@@ -28,7 +33,10 @@ void GameStats::saveStatsToFile(const std::string& filename) const {
         existingStats.WhiteWinsScore + this->WhiteWinsScore,
         existingStats.BlackWinsScore + this->BlackWinsScore,
         existingStats.WhiteMovesScore + this->WhiteMovesScore,
-        existingStats.BlackMovesScore + this->BlackMovesScore
+        existingStats.BlackMovesScore + this->BlackMovesScore,
+        existingStats.GameCounter + this->GameCounter,
+        existingStats.WhiteWinPercent,
+        existingStats.BlackWinPercent
     );
 
     // Debug: Print the values being written
@@ -44,7 +52,10 @@ void GameStats::saveStatsToFile(const std::string& filename) const {
         outFile << newStats.WhiteWinsScore << " "
             << newStats.BlackWinsScore << " "
             << newStats.WhiteMovesScore << " "
-            << newStats.BlackMovesScore;
+            << newStats.BlackMovesScore << " "
+            << newStats.GameCounter << " "
+            << newStats.WhiteWinPercent << " "
+            << newStats.BlackWinPercent;
         if (!outFile) {
             std::cerr << "Error writing to file!" << std::endl;
         }
@@ -63,7 +74,10 @@ void GameStats::loadSaveFromFile(const std::string& filename) {
         inFile >> this->WhiteWinsScore
             >> this->BlackWinsScore
             >> this->WhiteMovesScore
-            >> this->BlackMovesScore;
+            >> this->BlackMovesScore
+            >> this->GameCounter
+            >> this->WhiteWinPercent
+            >> this->BlackWinPercent;
         inFile.close();
         std::cout << "Game statistics loaded from text format!" << std::endl;
     }
@@ -71,5 +85,6 @@ void GameStats::loadSaveFromFile(const std::string& filename) {
         std::cerr << "Failed to open file for loading!" << std::endl;
     }
 }
+
 
 

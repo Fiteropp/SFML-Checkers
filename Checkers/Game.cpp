@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "Saves.h"
 #include <iostream>
+#include <iomanip>
 
 #define DEBUG // Comment this out to disable debug mode
 
@@ -47,6 +48,17 @@ sf::Sprite playerWinnerSpriteBlack;
 sf::Texture playerWinnerTextureWhite;
 sf::Sprite playerWinnerSpriteWhite;
 
+//Stats button
+sf::Texture statsButtonTexture;
+sf::Sprite statsButtonSprite;
+
+sf::Font font;
+
+//Text
+sf::Text whiteWins("HI", font, 20);
+sf::Text blackWins;
+sf::Text whiteMoves;
+sf::Text blackMoves;
 
 Game::Game()
     : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close),
@@ -56,8 +68,18 @@ Game::Game()
     board.loadTextures();
 
     InitializeUI();
-
     loadButtonsTextures();
+    LoadFont();
+}
+
+void Game::LoadFont()
+{
+    if (!font.loadFromFile("pixel-font/slkscr.ttf")) {
+        std::cout << ("Failed to load font: pixel-font/slkscr.ttf");
+    }
+    else {
+        std::cout << ("Font loaded successfully\n ");
+    }
 }
 
 void Game::InitializeUI()
@@ -68,10 +90,6 @@ void Game::InitializeUI()
     winScreenBackground.setSize(sf::Vector2f(800, 180));
     winScreenBackground.setFillColor(sf::Color(116, 123, 123, 220));
     winScreenBackground.setPosition(0, 240);
-
-    DebugButton.setSize(sf::Vector2f(80, 60));
-    DebugButton.setFillColor(sf::Color(0, 0, 0, 255));
-    DebugButton.setPosition(600, 400);
 }
 
 
@@ -97,6 +115,20 @@ void Game::configureSprite(sf::Sprite& sprite, sf::Texture& texture,
     sprite.setScale(scale);
 }
 
+void Game::configureFontAndString(sf::Text& text, sf::Font& font,
+    sf::Vector2f position,
+    int scale,
+    const sf::Color& color,
+	int string
+    ) {
+	text.setFont(font);
+    text.setPosition(position);
+    text.setCharacterSize(scale);
+	text.setFillColor(color);
+	std::string str = std::to_string(string);
+    text.setString(str);
+}
+
 
 
 void Game::loadButtonsTextures()
@@ -113,7 +145,7 @@ void Game::loadButtonsTextures()
 
     // play button texture
     if (loadTexture("textures/play_btn.png", playbtnTexture)) {
-        configureSprite(playBtnSprite, playbtnTexture, { 267, 280 }, { 5.5f, 5.5f });
+        configureSprite(playBtnSprite, playbtnTexture, { 267, 230 }, { 5.5f, 5.5f });
     }
 
     // restart button texture
@@ -141,15 +173,22 @@ void Game::loadButtonsTextures()
         configureSprite(closeVictoryScreenBtnSprite, closeVictoryScreenBtnTexture, { 350, 370 }, { 1.5f, 1.5f });
     }
 
+	// stats button
+    if (loadTexture("textures/stats_btn.png", statsButtonTexture)) {
+        configureSprite(statsButtonSprite, statsButtonTexture, { 335, 500 }, { 2.3f, 2.3f });
+    }
+
     // white checker texture
     if (loadTexture("textures/white_king.png", playerWinnerTextureWhite)) {
         configureSprite(playerWinnerSpriteWhite, playerWinnerTextureWhite, { 85, 270 }, { 5.0f, 5.0f });
     }
 
-    // white black texture
+    // black checker texture
     if (loadTexture("textures/black_king.png", playerWinnerTextureBlack)) {
         configureSprite(playerWinnerSpriteBlack, playerWinnerTextureBlack, { 85, 270 }, { 5.0f, 5.0f });
     }
+
+    
     
     loadIcon();
 }
@@ -208,7 +247,7 @@ void Game::HandleButtonClicks(int mouseX, int mouseY)
         restartGame();
     }
 
-    if (DebugButton.getGlobalBounds().contains(mouseX, mouseY)) {
+    if (statsButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
         loadStats();
     }
 
@@ -265,15 +304,25 @@ void Game::update() {
 }
 
 void Game::loadStats() {
-	// Create a GameStatsBinary object
-	GameStats stats;
-	// Load from a binary file
-	stats.loadSaveFromFile("game_stats.dat");
-	// Display the loaded stats
-	std::cout << "White Wins: " << stats.WhiteWinsScore << std::endl;
-	std::cout << "Black Wins: " << stats.BlackWinsScore << std::endl;
-	std::cout << "White Moves: " << stats.WhiteMovesScore << std::endl;
-	std::cout << "Black Moves: " << stats.BlackMovesScore << std::endl;
+
+    GameStats stats;
+    // Load saved stats from file
+    stats.loadSaveFromFile("game_stats.dat");
+
+	areStatsVisible = true;
+
+	std::string whiteWinsString = std::to_string(stats.WhiteWinsScore);
+
+    sf::Text whiteWins(whiteWinsString, font, 20);
+	whiteWins.setPosition(100, 100);
+	whiteWins.setFillColor(sf::Color::Black);
+    window.draw(whiteWins);
+    
+    sf::Text blackWins;
+    sf::Text whiteMoves;
+    sf::Text blackMoves;
+	printf("White Wins: %d\n", stats.WhiteWinsScore);
+	
 }
 
 
@@ -296,33 +345,48 @@ void Game::render() {
     logoTextureSprite.setPosition(20, 25);
     logoTextureSprite.setScale(1.65f, 1.65f);
 
-    menuGameExitSprite.setPosition(280, 420);
+    menuGameExitSprite.setPosition(280, 370);
     menuGameExitSprite.setScale(5.0f, 5.0f);
 
     
+    drawMenuAndUI();
+
+    
+    renderVictoryScreen();
+
+    window.display();
+
+    if (areStatsVisible) {
+		
+		window.draw(blackWins);
+		window.draw(whiteMoves);
+		window.draw(blackMoves);
+    }
+}
+
+void Game::drawMenuAndUI()
+{
     if (isMenuVisible) {
-        window.draw(menuBackground);   
+        window.draw(menuBackground);
         window.draw(playBtnSprite);
         window.draw(logoTextureSprite);
         window.draw(menuGameExitSprite);
-		window.draw(DebugButton);
+        window.draw(statsButtonSprite);
     }
     else {
         menuGameExitSprite.setScale(2.0f, 2.0f);
         menuGameExitSprite.setPosition(650, 530);
 
         window.draw(menuGameExitSprite);
-
         window.draw(restartButtonSprite);
-
         window.draw(currentPlayerFrameSprite);
-
-        window.draw(DebugButton);
     }
+}
 
-    
+void Game::renderVictoryScreen()
+{
     if (victoryScreenVisible) {
-        
+
         window.draw(winScreenBackground);
         window.draw(victoryTextSprite);
         window.draw(winnerTextSprite);
@@ -330,6 +394,4 @@ void Game::render() {
 
         currentPlayer == Piece::Type::BLACK ? window.draw(playerWinnerSpriteWhite) : window.draw(playerWinnerSpriteBlack);
     };
-
-    window.display();
 }
