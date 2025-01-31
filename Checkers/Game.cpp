@@ -55,7 +55,7 @@ sf::Sprite statsButtonSprite;
 sf::Font font;
 
 //Text
-sf::Text whiteWins("HI", font, 20);
+sf::Text whiteWins;
 sf::Text blackWins;
 sf::Text whiteMoves;
 sf::Text blackMoves;
@@ -302,7 +302,7 @@ void Game::update() {
         
     }
 }
-
+/*
 void Game::loadStats() {
 
     GameStats stats;
@@ -310,19 +310,54 @@ void Game::loadStats() {
     stats.loadSaveFromFile("game_stats.dat");
 
 	areStatsVisible = true;
-
 	std::string whiteWinsString = std::to_string(stats.WhiteWinsScore);
-
     sf::Text whiteWins(whiteWinsString, font, 20);
 	whiteWins.setPosition(100, 100);
 	whiteWins.setFillColor(sf::Color::Black);
     window.draw(whiteWins);
-    
+
+
     sf::Text blackWins;
     sf::Text whiteMoves;
     sf::Text blackMoves;
 	printf("White Wins: %d\n", stats.WhiteWinsScore);
-	
+	printf("Black Wins: %d\n", stats.BlackWinsScore);
+}
+*/
+
+void Game::loadStats() {
+    GameStats stats;
+    stats.loadSaveFromFile("game_stats.dat");
+
+    areStatsVisible = !areStatsVisible;
+
+   
+    whiteWins.setString("White Wins: " + std::to_string(stats.WhiteWinsScore));
+    printf("White Wins: %d\n", stats.WhiteWinsScore);
+    blackWins.setString("Black Wins: " + std::to_string(stats.BlackWinsScore));
+    whiteMoves.setString("White Moves: " + std::to_string(stats.WhiteMovesScore));
+    blackMoves.setString("Black Moves: " + std::to_string(stats.BlackMovesScore));
+
+    whiteWins.setFont(font);
+    blackWins.setFont(font);
+    whiteMoves.setFont(font);
+    blackMoves.setFont(font);
+
+    whiteWins.setCharacterSize(20);
+    blackWins.setCharacterSize(20);
+    whiteMoves.setCharacterSize(20);
+    blackMoves.setCharacterSize(20);
+
+    whiteWins.setFillColor(sf::Color::Black);
+    blackWins.setFillColor(sf::Color::Black);
+    whiteMoves.setFillColor(sf::Color::Black);
+    blackMoves.setFillColor(sf::Color::Black);
+
+ 
+    whiteWins.setPosition(100, 133);
+    blackWins.setPosition(100, 150);
+    whiteMoves.setPosition(100, 170);
+    blackMoves.setPosition(100, 190);
 }
 
 
@@ -354,14 +389,18 @@ void Game::render() {
     
     renderVictoryScreen();
 
-    window.display();
+   
 
-    if (areStatsVisible) {
-		
+    if (!areStatsVisible) {
+		window.draw(whiteWins);
 		window.draw(blackWins);
 		window.draw(whiteMoves);
 		window.draw(blackMoves);
+		
     }
+  
+
+     window.display();
 }
 
 void Game::drawMenuAndUI()
@@ -374,6 +413,7 @@ void Game::drawMenuAndUI()
         window.draw(statsButtonSprite);
     }
     else {
+		areStatsVisible = true;
         menuGameExitSprite.setScale(2.0f, 2.0f);
         menuGameExitSprite.setPosition(650, 530);
 
