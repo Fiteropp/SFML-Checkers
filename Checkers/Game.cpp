@@ -40,6 +40,10 @@ sf::Sprite winnerTextSprite;
 sf::Texture closeVictoryScreenBtnTexture;
 sf::Sprite  closeVictoryScreenBtnSprite;
 
+//Close stats button
+sf::Texture closeStatsScreenBtnTexture;
+sf::Sprite  closeStatsScreenBtnSprite;
+
 //Black checker
 sf::Texture playerWinnerTextureBlack;
 sf::Sprite playerWinnerSpriteBlack;
@@ -59,6 +63,12 @@ sf::Text whiteWins;
 sf::Text blackWins;
 sf::Text whiteMoves;
 sf::Text blackMoves;
+sf::Text whiteWinPercent;
+sf::Text blackWinPercent;
+sf::Text winsText;
+sf::Text movesText;
+sf::Text winPercentText;
+
 
 Game::Game()
     : window(sf::VideoMode(800, 600), "C++ Checkers", sf::Style::Titlebar | sf::Style::Close),
@@ -90,6 +100,9 @@ void Game::InitializeUI()
     winScreenBackground.setSize(sf::Vector2f(800, 180));
     winScreenBackground.setFillColor(sf::Color(116, 123, 123, 220));
     winScreenBackground.setPosition(0, 240);
+
+	statsBackground.setSize(sf::Vector2f(800, 600));
+	statsBackground.setFillColor(sf::Color(0, 128, 111, 255));
 }
 
 
@@ -127,6 +140,19 @@ void Game::configureFontAndString(sf::Text& text, sf::Font& font,
 	text.setFillColor(color);
 	std::string str = std::to_string(string);
     text.setString(str);
+}
+
+void Game::configureFontAndText(sf::Text& text, sf::Font& font,
+    sf::Vector2f position,
+    int scale,
+    const sf::Color& color,
+    sf::String string
+) {
+    text.setFont(font);
+    text.setPosition(position);
+    text.setCharacterSize(scale);
+    text.setFillColor(color);
+    text.setString(string);
 }
 
 
@@ -173,6 +199,11 @@ void Game::loadButtonsTextures()
         configureSprite(closeVictoryScreenBtnSprite, closeVictoryScreenBtnTexture, { 350, 370 }, { 1.5f, 1.5f });
     }
 
+    // close button
+    if (loadTexture("textures/close_btn.png", closeStatsScreenBtnTexture)) {
+        configureSprite(closeStatsScreenBtnSprite, closeStatsScreenBtnTexture, { 360, 30 }, { 2.0f, 2.0f });
+    }
+
 	// stats button
     if (loadTexture("textures/stats_btn.png", statsButtonTexture)) {
         configureSprite(statsButtonSprite, statsButtonTexture, { 335, 500 }, { 2.3f, 2.3f });
@@ -207,6 +238,7 @@ void Game::loadIcon()
 
 void Game::hideMenu() {
     isMenuVisible = false;  
+	areStatsVisible = false;
 }
 
 void Game::processInput() {
@@ -245,6 +277,10 @@ void Game::HandleButtonClicks(int mouseX, int mouseY)
 
     if (closeVictoryScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY) && victoryScreenVisible) {
         restartGame();
+    }
+
+    if (closeStatsScreenBtnSprite.getGlobalBounds().contains(mouseX, mouseY)) {
+		areStatsVisible = false;
     }
 
     if (statsButtonSprite.getGlobalBounds().contains(mouseX, mouseY)) {
@@ -302,62 +338,24 @@ void Game::update() {
         
     }
 }
-/*
-void Game::loadStats() {
 
-    GameStats stats;
-    // Load saved stats from file
-    stats.loadSaveFromFile("game_stats.dat");
-
-	areStatsVisible = true;
-	std::string whiteWinsString = std::to_string(stats.WhiteWinsScore);
-    sf::Text whiteWins(whiteWinsString, font, 20);
-	whiteWins.setPosition(100, 100);
-	whiteWins.setFillColor(sf::Color::Black);
-    window.draw(whiteWins);
-
-
-    sf::Text blackWins;
-    sf::Text whiteMoves;
-    sf::Text blackMoves;
-	printf("White Wins: %d\n", stats.WhiteWinsScore);
-	printf("Black Wins: %d\n", stats.BlackWinsScore);
-}
-*/
 
 void Game::loadStats() {
-    GameStats stats;
-    stats.loadSaveFromFile("game_stats.dat");
-
-    areStatsVisible = !areStatsVisible;
-
    
-    whiteWins.setString("White Wins: " + std::to_string(stats.WhiteWinsScore));
-    printf("White Wins: %d\n", stats.WhiteWinsScore);
-    blackWins.setString("Black Wins: " + std::to_string(stats.BlackWinsScore));
-    whiteMoves.setString("White Moves: " + std::to_string(stats.WhiteMovesScore));
-    blackMoves.setString("Black Moves: " + std::to_string(stats.BlackMovesScore));
+    GameStats stats;
+    
+    stats.loadSaveFromFile("game_stats.dat");
 
-    whiteWins.setFont(font);
-    blackWins.setFont(font);
-    whiteMoves.setFont(font);
-    blackMoves.setFont(font);
-
-    whiteWins.setCharacterSize(20);
-    blackWins.setCharacterSize(20);
-    whiteMoves.setCharacterSize(20);
-    blackMoves.setCharacterSize(20);
-
-    whiteWins.setFillColor(sf::Color::Black);
-    blackWins.setFillColor(sf::Color::Black);
-    whiteMoves.setFillColor(sf::Color::Black);
-    blackMoves.setFillColor(sf::Color::Black);
-
- 
-    whiteWins.setPosition(100, 133);
-    blackWins.setPosition(100, 150);
-    whiteMoves.setPosition(100, 170);
-    blackMoves.setPosition(100, 190);
+    configureFontAndString(whiteMoves, font, { 230, 230 }, 30, sf::Color::Black, stats.WhiteMovesScore);
+    configureFontAndString(blackMoves, font, { 520, 230 }, 30, sf::Color::Black, stats.BlackMovesScore);
+    configureFontAndString(whiteWins, font, { 230, 330 }, 30, sf::Color::Black, stats.WhiteWinsScore);
+    configureFontAndString(blackWins, font, { 520, 330 }, 30, sf::Color::Black, stats.BlackWinsScore);
+	configureFontAndString(whiteWinPercent, font, { 230, 430 }, 30, sf::Color::Black, stats.WhiteWinPercent);
+	configureFontAndString(blackWinPercent, font, { 520, 430 }, 30, sf::Color::Black, stats.BlackWinPercent);
+	configureFontAndText(movesText, font, { 60, 230 }, 30, sf::Color(14, 12, 26), "Moves:");
+    configureFontAndText(winsText, font, { 60, 330 }, 30, sf::Color(14, 12, 26), "Wins:");
+	configureFontAndText(winPercentText, font, { 60, 430 }, 30, sf::Color(14, 12, 26), "Win %:");
+	areStatsVisible = true;
 }
 
 
@@ -372,9 +370,7 @@ void Game::run() {
 
 void Game::render() {
     window.clear(sf::Color(0, 24, 30));   
-
     board.render(window);
-
     window.draw(restartButtonSprite);
 
     logoTextureSprite.setPosition(20, 25);
@@ -383,23 +379,27 @@ void Game::render() {
     menuGameExitSprite.setPosition(280, 370);
     menuGameExitSprite.setScale(5.0f, 5.0f);
 
-    
     drawMenuAndUI();
-
-    
     renderVictoryScreen();
 
-   
-
-    if (!areStatsVisible) {
+    if (areStatsVisible && isMenuVisible) {
+		window.draw(statsBackground);
+		window.draw(winsText);
+		window.draw(movesText);
+		window.draw(winPercentText);
 		window.draw(whiteWins);
 		window.draw(blackWins);
 		window.draw(whiteMoves);
 		window.draw(blackMoves);
-		
+		window.draw(whiteWinPercent);
+		window.draw(blackWinPercent);
+        window.draw(playerWinnerSpriteBlack);
+		playerWinnerSpriteBlack.setPosition(230, 100);
+		window.draw(playerWinnerSpriteWhite);
+		playerWinnerSpriteWhite.setPosition(520, 100);
+		window.draw(closeStatsScreenBtnSprite);
     }
   
-
      window.display();
 }
 
