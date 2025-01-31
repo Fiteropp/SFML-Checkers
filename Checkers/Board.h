@@ -23,6 +23,8 @@ private:
     
     Game* gameInstance;
 
+	
+
 public:
     Board(Game* game);
 
@@ -37,7 +39,13 @@ public:
     void render(sf::RenderWindow& window);
     void switchPlayer();
     void loadTextures();
-    bool checkWinCondition(Piece::Type currentPlayer) const;
+    bool checkWinCondition(Piece::Type currentPlayer);
+
+
+    int whitePieceWinsCounter;
+    int blackPieceWinsCounter;
+    int whitePieceMoveCounter;
+    int blackPieceMoveCounter;
 };
 
 #endif

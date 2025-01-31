@@ -19,13 +19,13 @@ sf::Texture blackPlayerSquareTexture;
 sf::Texture chosenCheckerTexture;
 sf::Sprite chosenCheckerSprite;
 
-
-Board::Board(Game* game) : gameInstance(game), pieceSelected(false), selectedX(-1), selectedY(-1) {
-	
-const float tileSize = 75.0f;
+Board::Board(Game* game) : gameInstance(game), pieceSelected(false), selectedX(-1), selectedY(-1) {	
+	const float tileSize = 75.0f;
 
 	initializeBoard(); 
 }
+
+
 
 
 //Place Pieces
@@ -48,8 +48,6 @@ void Board::initializeBoard() {
 
 
 bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type currentPlayer) const {
-
-	bool singleMove = true;
 
 	if (startX < 0 || startX >= 8 || startY < 0 || startY >= 8 ||
 		endX < 0 || endX >= 8 || endY < 0 || endY >= 8)
@@ -77,9 +75,6 @@ bool Board::isValidMove(int startX, int startY, int endX, int endY, Piece::Type 
 
 
 	if (dx == 1 && dy == 1) {
-
-		singleMove = true;
-		
 		
 		if (board[endY][endX].type != Piece::Type::NONE)
 			return false;
@@ -186,6 +181,7 @@ bool Board::movePiece(int startX, int startY, int endX, int endY, Piece::Type cu
 	};
 	
 	return true;
+	
 
 }
 
@@ -310,7 +306,7 @@ void Board::render(sf::RenderWindow& window) {
 		currentPlayerSprite.setTexture(blackPlayerSquareTexture);
 	}
 
-	if (pieceSelected){
+	if (pieceSelected && selectedX <= 8 && selectedY <= 8){
 	chosenCheckerSprite.setTexture(chosenCheckerTexture);
 	chosenCheckerSprite.setPosition(selectedX * tileSize, selectedY * tileSize);
 	chosenCheckerSprite.setScale(tileSize / chosenCheckerSprite.getLocalBounds().width,
@@ -345,6 +341,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 		// Try to move selected piece
 		if (isValidMove(selectedX, selectedY, gridX, gridY, currentPlayer)) {
 			movePiece(selectedX, selectedY, gridX, gridY, currentPlayer);
+			currentPlayer == Piece::Type::WHITE ? whitePieceMoveCounter++ : blackPieceMoveCounter++;
 			std::cout << "Moved piece to (" << gridX << ", " << gridY << ")\n";
 
 			// Switch player after a valid move
@@ -366,7 +363,7 @@ void Board::handleClick(int gridX, int gridY, Piece::Type& currentPlayer) {
 }
 
 
-bool Board::checkWinCondition(Piece::Type currentPlayer) const {
+bool Board::checkWinCondition(Piece::Type currentPlayer) {
 	int whitePieces = 0;
 	int blackPieces = 0;
 	bool canMove = false;
