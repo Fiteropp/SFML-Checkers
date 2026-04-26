@@ -16,6 +16,7 @@ private:
 	bool areStatsVisible = false;
     bool isGameOver;
     bool winRegistered;
+    bool needsRedraw;
     
 
     bool loadTexture(const std::string& filePath, sf::Texture& texture);

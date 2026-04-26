@@ -12,3 +12,4 @@
 *.dat
 /Checkers/x64/Debug/
 /Checkers/x64/Release/
+/Checkers/game_stats.dat

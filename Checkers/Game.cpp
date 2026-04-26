@@ -261,6 +261,7 @@ void Game::processInput() {
             board.handleClick(gridX, gridY, currentPlayer);  
 
             HandleButtonClicks(mouseX, mouseY);
+            needsRedraw = true;
         }
     }
 }
@@ -360,11 +361,14 @@ void Game::loadStats() {
 
 
 void Game::run() {
-    
+    window.setFramerateLimit(30);
+
     while (window.isOpen()) {
-        processInput(); 
-        update();       
-        render();       
+        processInput();
+        if (needsRedraw) {
+            render();
+            needsRedraw = false;
+        }
     }
 }
 
